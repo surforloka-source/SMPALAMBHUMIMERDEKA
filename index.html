@@ -57,12 +57,18 @@
         
         .admin-box { background: #e8f5e9; padding: 20px; border-radius: 15px; border: 3px solid #4caf50; margin-bottom: 20px; }
         .admin-box-orange { background: #fff3e0; padding: 20px; border-radius: 15px; border: 3px solid #ff9800; margin-bottom: 20px; }
+        .admin-box-blue { background: #e3f2fd; padding: 20px; border-radius: 15px; border: 3px solid #2196f3; margin-bottom: 20px; }
         
         .modal-overlay {
             position: fixed; top: 10%; left: 50%; transform: translate(-50%, 0);
             background: white; padding: 20px; border: 4px solid #333; z-index: 1000;
             max-height: 80vh; overflow-y: auto; width: 90%; max-width: 750px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .flex-row { display: flex; gap: 10px; align-items: center; margin-bottom: 15px;}
+        @media (max-width: 600px) {
+            .flex-row { flex-direction: column; align-items: stretch;}
         }
 
         @media print {
@@ -102,6 +108,46 @@
         <!-- DASHBOARD ADMIN -->
         <div id="admin-section" class="hidden">
             <h2 class="no-print">Dashboard Guru / Admin 👨‍🏫</h2>
+
+            <!-- FITUR BARU: MANAJEMEN SISWA -->
+            <div class="admin-box-blue no-print">
+                <h3 style="color: #0d47a1;">Manajemen Data Siswa 🧑‍🎓</h3>
+                <p style="font-size: 13px; color: #333; margin-top: -10px;">Tambahkan data siswa baru secara manual ke dalam sistem.</p>
+                
+                <div class="flex-row">
+                    <input type="text" id="new-nis" placeholder="NIS (Misal: 0100)">
+                    <input type="text" id="new-nama" placeholder="Nama Lengkap Siswa">
+                    <select id="new-kelas">
+                        <option value="VII">Kelas VII</option>
+                        <option value="VIII">Kelas VIII</option>
+                        <option value="IX">Kelas IX</option>
+                    </select>
+                    <button onclick="tambahSiswaManual()" style="margin-top:0; background-color:#2196f3; border-color:#0d47a1; color:white;">Tambah</button>
+                </div>
+
+                <hr style="border: 1px dashed #90caf9; margin: 20px 0;">
+                
+                <h4 style="margin-top: 0; color: #0d47a1;">Daftar Siswa Terdaftar</h4>
+                <div style="margin-bottom: 10px;">
+                    <select id="filter-kelas-siswa" onchange="renderTabelSiswa()" style="padding: 10px; width: auto; display: inline-block;">
+                        <option value="ALL">Tampilkan Semua Kelas</option>
+                        <option value="VII">Hanya Kelas VII</option>
+                        <option value="VIII">Hanya Kelas VIII</option>
+                        <option value="IX">Hanya Kelas IX</option>
+                    </select>
+                </div>
+                
+                <div style="max-height: 300px; overflow-y: auto; border: 2px solid #90caf9; border-radius: 10px;">
+                    <table id="table-siswa" style="margin-top: 0;">
+                        <thead style="position: sticky; top: 0;">
+                            <tr style="background-color: #2196f3;">
+                                <th>NIS</th><th>Nama Siswa</th><th>Kelas</th><th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
             
             <div class="admin-box no-print">
                 <h3>Upload Soal Baru (Format .CSV)</h3>
@@ -109,6 +155,7 @@
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label for="quiz-kelas">Target Kelas Ujian:</label>
                     <select id="quiz-kelas">
+                        <option value="VII">Kelas VII</option>
                         <option value="VIII">Kelas VIII</option>
                         <option value="IX">Kelas IX</option>
                     </select>
@@ -116,7 +163,6 @@
                 <input type="file" id="csv-file" accept=".csv" style="margin-bottom: 10px;">
                 <button onclick="uploadCSV()" style="background-color: #66bb6a; border-color: #2e7d32; margin-bottom: 15px;">Upload Soal 📤</button>
 
-                <!-- FITUR BARU: ASISTEN PANDUAN GEMINI AI UNTUK ISTRI / GURU -->
                 <div style="background: #e3f2fd; padding: 15px; border-radius: 15px; border: 3px solid #2196f3; margin-top: 10px;">
                     <h4 style="margin-top: 0; color: #0d47a1; text-align: left; font-family: 'Fredoka One', cursive;">🤖 Bantuan Ubah Soal Word/Excel ke CSV via Gemini AI</h4>
                     <p style="font-size: 13px; margin-bottom: 10px; color:#333; line-height: 1.4;">
@@ -194,11 +240,10 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <script>
-        // FITUR BARU: SALIN PERINTAH GEMINI
         function copyGeminiPrompt() {
             const promptText = document.getElementById('prompt-gemini');
             promptText.select();
-            promptText.setSelectionRange(0, 99999); // Untuk mobile device
+            promptText.setSelectionRange(0, 99999); 
             navigator.clipboard.writeText(promptText.value);
             alert("Perintah AI Berhasil Disalin! 👍\n\nLangkah selanjutnya:\n1. Klik tombol 'Buka Gemini AI'\n2. Paste (Tempel) perintah ini di chat Gemini\n3. Paste teks kumpulan soal Word/Excel Anda di bawah perintah tersebut, lalu kirim.");
         }
@@ -216,8 +261,8 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // DATA SISWA
-        const data_siswa = [
+        // DATA SISWA (Bawaan Sistem)
+        const data_siswa_bawaan = [
             { "nis": "0057", "nama": "Ahmad Hafidz Alfahri", "kelas": "VIII" },
             { "nis": "0061", "nama": "Ahmad Wafi Ubaidillah", "kelas": "VIII" },
             { "nis": "0060", "nama": "Alif Fiyan Wahyu Utomo", "kelas": "VIII" },
@@ -284,10 +329,106 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
             { "nis": "0096", "nama": "Yusria Fildzah Gosshani", "kelas": "IX" }
         ];
 
+        let data_siswa_tambahan = []; // Data siswa yang ditambah manual (dari Firebase)
         let currentUser = null;
         let currentQuizId = null;
         let currentQuestions = [];
 
+        // OTOMATIS AMBIL DATA SISWA TAMBAHAN SAAT WEB DIBUKA
+        db.collection("data_siswa_tambahan").get().then((snapshot) => {
+            snapshot.forEach(doc => {
+                data_siswa_tambahan.push({ id: doc.id, ...doc.data() });
+            });
+        });
+
+        // ================= MANAJEMEN SISWA =================
+        function tambahSiswaManual() {
+            const nis = document.getElementById('new-nis').value.trim();
+            const nama = document.getElementById('new-nama').value.trim();
+            const kelas = document.getElementById('new-kelas').value;
+
+            if(!nis || !nama) { alert("NIS dan Nama harus diisi!"); return; }
+
+            // Validasi NIS ganda
+            const allSiswa = [...data_siswa_bawaan, ...data_siswa_tambahan];
+            if(allSiswa.find(s => s.nis === nis)) {
+                alert("Gagal: NIS tersebut sudah digunakan oleh siswa lain!"); return;
+            }
+
+            db.collection("data_siswa_tambahan").add({
+                nis: nis,
+                nama: nama,
+                kelas: kelas,
+                sumber: "Manual",
+                waktu: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                alert("Siswa berhasil ditambahkan!");
+                document.getElementById('new-nis').value = "";
+                document.getElementById('new-nama').value = "";
+                // Refresh data lokal
+                db.collection("data_siswa_tambahan").get().then((snapshot) => {
+                    data_siswa_tambahan = [];
+                    snapshot.forEach(doc => { data_siswa_tambahan.push({ id: doc.id, ...doc.data() }); });
+                    renderTabelSiswa();
+                });
+            }).catch(err => alert("Gagal: " + err.message));
+        }
+
+        function renderTabelSiswa() {
+            const filterKelas = document.getElementById('filter-kelas-siswa').value;
+            const tbody = document.querySelector("#table-siswa tbody");
+            tbody.innerHTML = "";
+
+            let combined = [
+                ...data_siswa_bawaan.map(s => ({...s, sumber: 'Bawaan'})), 
+                ...data_siswa_tambahan
+            ];
+            
+            if(filterKelas !== "ALL") {
+                combined = combined.filter(s => s.kelas === filterKelas);
+            }
+
+            // Urutkan berdasarkan nama
+            combined.sort((a,b) => a.nama.localeCompare(b.nama));
+
+            if(combined.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Belum ada siswa di kelas ini.</td></tr>";
+                return;
+            }
+
+            combined.forEach(s => {
+                let aksi = s.sumber === 'Bawaan' 
+                    ? `<span style="font-size:11px; color:#888;">Data Fix</span>` 
+                    : `<button onclick="hapusSiswaManual('${s.id}', '${s.nama.replace(/'/g, "\\'")}')" style="background:#ef5350; border-color:#c62828; padding:3px 8px; font-size:12px; margin:0;">Hapus</button>`;
+                
+                let sumberChip = s.sumber === 'Bawaan' 
+                    ? `<span style="font-size:10px; background:#e0e0e0; padding:2px 5px; border-radius:4px; margin-left:5px;">Sistem</span>`
+                    : `<span style="font-size:10px; background:#c8e6c9; padding:2px 5px; border-radius:4px; margin-left:5px;">Manual</span>`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${s.nis}</td>
+                        <td><strong>${s.nama}</strong> ${sumberChip}</td>
+                        <td>${s.kelas}</td>
+                        <td style="text-align:center;">${aksi}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function hapusSiswaManual(docId, nama) {
+            if(confirm(`Yakin ingin menghapus permanen data siswa: ${nama}?`)) {
+                db.collection("data_siswa_tambahan").doc(docId).delete().then(() => {
+                    db.collection("data_siswa_tambahan").get().then((snapshot) => {
+                        data_siswa_tambahan = [];
+                        snapshot.forEach(doc => { data_siswa_tambahan.push({ id: doc.id, ...doc.data() }); });
+                        renderTabelSiswa();
+                    });
+                });
+            }
+        }
+
+        // ================= FUNGSI UTAMA =================
         function login() {
             const input = document.getElementById('login-input').value.trim();
             if (input === "GURUJUARA") { 
@@ -295,9 +436,14 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
                 document.getElementById('admin-section').classList.remove('hidden');
                 loadQuizzesForAdmin(); 
                 loadHasil(); 
+                renderTabelSiswa(); // Muat tabel siswa di dashboard guru
                 return;
             }
-            const siswa = data_siswa.find(s => s.nis === input || s.nama.toLowerCase() === input.toLowerCase());
+            
+            // Cek login gabungan (Bawaan + Tambahan Manual)
+            const allSiswa = [...data_siswa_bawaan, ...data_siswa_tambahan];
+            const siswa = allSiswa.find(s => s.nis === input || s.nama.toLowerCase() === input.toLowerCase());
+            
             if(siswa) {
                 currentUser = siswa;
                 document.getElementById('student-name').innerText = siswa.nama;
@@ -382,11 +528,7 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
         }
 
         function toggleQuizStatus(quizId, currentStatus) {
-            db.collection("bank_soal").doc(quizId).update({
-                status_aktif: !currentStatus
-            }).then(() => {
-                loadQuizzesForAdmin(); 
-            }).catch(err => alert("Gagal update status: " + err.message));
+            db.collection("bank_soal").doc(quizId).update({ status_aktif: !currentStatus }).then(() => { loadQuizzesForAdmin(); });
         }
 
         function analisisSoal(quizId, judul) {
@@ -401,10 +543,7 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
                 
                 db.collection("hasil_ujian").where("quiz_id", "==", quizId).get().then(hasilSnap => {
                     const totalSiswa = hasilSnap.size;
-                    if(totalSiswa === 0) {
-                        contentDiv.innerHTML = "<p>Belum ada satupun siswa yang mengerjakan ujian ini.</p>";
-                        return;
-                    }
+                    if(totalSiswa === 0) { contentDiv.innerHTML = "<p>Belum ada satupun siswa yang mengerjakan ujian ini.</p>"; return; }
 
                     let stats = {}; 
                     hasilSnap.forEach(doc => {
@@ -450,22 +589,7 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
                 const soalData = data.soal || [];
                 const targetKelas = data.kelas || "VIII";
 
-                let htmlContent = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head><title>${data.judul}</title><style>
-                    body { font-family: 'Arial', sans-serif; font-size: 12pt; line-height: 1.25; color: #000000; }
-                    .kop-surat { text-align: center; margin-bottom: 20px; border-bottom: 3px double #000000; padding-bottom: 5px; }
-                    .kop-title { font-size: 16pt; font-weight: bold; margin: 0; }
-                    .kop-subtitle { font-size: 12pt; font-weight: bold; margin: 0; text-transform: uppercase; }
-                    .info-table { width: 100%; margin-bottom: 20px; font-size: 11pt; border: none; }
-                    .soal-container { margin-bottom: 15px; page-break-inside: avoid; }
-                    .pertanyaan { font-weight: normal; margin: 0 0 5px 0; text-align: justify; }
-                    .opsi-table { margin-left: 15px; width: 100%; border: none; margin-bottom: 5px; }
-                    .opsi-item { padding: 2px 0; width: 50%; vertical-align: top; }
-                </style></head><body>
-                <div class="kop-surat"><p class="kop-title">SMP ALAM BHUMI MERDEKA</p><p class="kop-subtitle">LEMBAR SOAL UJIAN</p><p style="margin: 0; font-size: 10pt; font-style: italic;">Tahun Ajaran 2026/2027</p></div>
-                <table class="info-table"><tr><td style="width: 15%;">Mata Pelajaran</td><td style="width: 2%;">:</td><td style="width: 43%;"><strong>${data.judul}</strong></td><td style="width: 10%;">Nama</td><td style="width: 2%;">:</td><td>......................................</td></tr><tr><td>Kelas</td><td>:</td><td>${targetKelas}</td><td>NIS</td><td>:</td><td>......................................</td></tr></table>
-                <h4 style="border-bottom: 1px solid #000; padding-bottom: 3px; margin-bottom: 15px;">I. Pilihan Ganda</h4>`;
+                let htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><title>${data.judul}</title><style>body { font-family: 'Arial', sans-serif; font-size: 12pt; line-height: 1.25; color: #000000; } .kop-surat { text-align: center; margin-bottom: 20px; border-bottom: 3px double #000000; padding-bottom: 5px; } .kop-title { font-size: 16pt; font-weight: bold; margin: 0; } .kop-subtitle { font-size: 12pt; font-weight: bold; margin: 0; text-transform: uppercase; } .info-table { width: 100%; margin-bottom: 20px; font-size: 11pt; border: none; } .soal-container { margin-bottom: 15px; page-break-inside: avoid; } .pertanyaan { font-weight: normal; margin: 0 0 5px 0; text-align: justify; } .opsi-table { margin-left: 15px; width: 100%; border: none; margin-bottom: 5px; } .opsi-item { padding: 2px 0; width: 50%; vertical-align: top; } </style></head><body><div class="kop-surat"><p class="kop-title">SMP ALAM BHUMI MERDEKA</p><p class="kop-subtitle">LEMBAR SOAL UJIAN</p><p style="margin: 0; font-size: 10pt; font-style: italic;">Tahun Ajaran 2026/2027</p></div><table class="info-table"><tr><td style="width: 15%;">Mata Pelajaran</td><td style="width: 2%;">:</td><td style="width: 43%;"><strong>${data.judul}</strong></td><td style="width: 10%;">Nama</td><td style="width: 2%;">:</td><td>......................................</td></tr><tr><td>Kelas</td><td>:</td><td>${targetKelas}</td><td>NIS</td><td>:</td><td>......................................</td></tr></table><h4 style="border-bottom: 1px solid #000; padding-bottom: 3px; margin-bottom: 15px;">I. Pilihan Ganda</h4>`;
 
                 let pgCount = 0; let esaiCount = 0; let esaiHtml = "";
                 soalData.forEach((s) => {
@@ -515,35 +639,19 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
 
         function deleteQuiz(quizId, judul) {
             if (confirm(`Yakin mau menghapus ujian "${judul}"?`)) {
-                db.collection("bank_soal").doc(quizId).delete().then(() => {
-                    alert("Ujian berhasil dihapus!"); loadQuizzesForAdmin(); 
-                });
+                db.collection("bank_soal").doc(quizId).delete().then(() => { alert("Ujian dihapus!"); loadQuizzesForAdmin(); });
             }
         }
 
         function loadHasil() {
             const tbody = document.querySelector("#table-nilai tbody");
             tbody.innerHTML = "<tr><td colspan='5'>Loading data...</td></tr>";
-
             db.collection("hasil_ujian").orderBy("waktu", "desc").get().then((snapshot) => {
                 tbody.innerHTML = "";
                 snapshot.forEach((doc) => {
                     const data = doc.data();
-                    const docId = doc.id;
                     const safeNama = data.nama.replace(/'/g, "\\'");
-                    
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${data.judul_kuis}</td>
-                            <td><strong>${data.nama}</strong></td>
-                            <td>${data.kelas}</td>
-                            <td><strong style="font-size:18px; color:#d84315;">${data.nilai_pg}</strong></td>
-                            <td class="no-print" style="white-space: nowrap;">
-                                <button onclick="lihatDetailJawaban('${docId}')" style="background-color: #29b6f6; border-color: #0277bd; padding: 5px 10px; font-size: 12px; border-radius: 8px; margin-right: 5px; width: auto; display: inline-block;">Detail 🔍</button>
-                                <button onclick="hapusDanRemedial('${docId}', '${safeNama}', '${data.judul_kuis.replace(/'/g, "\\'")}')" style="background-color: #ff9800; border-color: #f57c00; padding: 5px 10px; font-size: 12px; border-radius: 8px; width: auto; display: inline-block;">Remedial 🔄</button>
-                            </td>
-                        </tr>
-                    `;
+                    tbody.innerHTML += `<tr><td>${data.judul_kuis}</td><td><strong>${data.nama}</strong></td><td>${data.kelas}</td><td><strong style="font-size:18px; color:#d84315;">${data.nilai_pg}</strong></td><td class="no-print" style="white-space: nowrap;"><button onclick="lihatDetailJawaban('${doc.id}')" style="background-color: #29b6f6; border-color: #0277bd; padding: 5px 10px; font-size: 12px; border-radius: 8px; margin-right: 5px; width: auto; display: inline-block;">Detail 🔍</button><button onclick="hapusDanRemedial('${doc.id}', '${safeNama}', '${data.judul_kuis.replace(/'/g, "\\'")}')" style="background-color: #ff9800; border-color: #f57c00; padding: 5px 10px; font-size: 12px; border-radius: 8px; width: auto; display: inline-block;">Remedial 🔄</button></td></tr>`;
                 });
             });
         }
@@ -594,10 +702,7 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
 
         function hapusDanRemedial(docId, nama, judul_kuis) {
             if(confirm(`Buka akses Remedial untuk siswa ${nama} di ujian "${judul_kuis}"?`)) {
-                db.collection("hasil_ujian").doc(docId).delete().then(() => {
-                    alert(`Akses remedial berhasil dibuka! Siswa ${nama} dapat mengerjakan ulang.`);
-                    loadHasil(); 
-                });
+                db.collection("hasil_ujian").doc(docId).delete().then(() => { alert(`Remedial dibuka untuk ${nama}.`); loadHasil(); });
             }
         }
 
@@ -611,34 +716,19 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
                 const kuisSelesai = [];
                 hasilSnap.forEach(doc => kuisSelesai.push(doc.data().quiz_id));
 
-                db.collection("bank_soal")
-                  .where("kelas", "==", currentUser.kelas)
-                  .where("status_aktif", "==", true)
-                  .get().then((snapshot) => {
+                db.collection("bank_soal").where("kelas", "==", currentUser.kelas).where("status_aktif", "==", true).get().then((snapshot) => {
                     listDiv.innerHTML = "";
                     if (snapshot.empty) {
                         listDiv.innerHTML = `<p style="text-align:center; color:#555; background:white; padding:15px; border-radius:10px;">Belum ada ujian aktif untuk Kelas ${currentUser.kelas} saat ini.</p>`;
                         return;
                     }
-
                     snapshot.forEach((doc) => {
                         const kuis = doc.data();
                         const isSelesai = kuisSelesai.includes(doc.id);
-
                         if(isSelesai) {
-                            listDiv.innerHTML += `
-                                <div class="quiz-card disabled" onclick="alert('Kamu sudah mengerjakan ujian ini.')">
-                                    <h3>✅ ${kuis.judul}</h3>
-                                    <p style="color:#d32f2f; font-weight:bold; margin-top:5px;">Selesai Dikerjakan</p>
-                                </div>
-                            `;
+                            listDiv.innerHTML += `<div class="quiz-card disabled" onclick="alert('Kamu sudah mengerjakan ujian ini.')"><h3>✅ ${kuis.judul}</h3><p style="color:#d32f2f; font-weight:bold; margin-top:5px;">Selesai Dikerjakan</p></div>`;
                         } else {
-                            listDiv.innerHTML += `
-                                <div class="quiz-card" onclick="startQuiz('${doc.id}', '${kuis.judul.replace(/'/g, "\\'")}')">
-                                    <h3>📝 ${kuis.judul}</h3>
-                                    <p style="color:#1565c0; font-weight:bold; margin-top:5px;">Klik untuk mulai mengerjakan</p>
-                                </div>
-                            `;
+                            listDiv.innerHTML += `<div class="quiz-card" onclick="startQuiz('${doc.id}', '${kuis.judul.replace(/'/g, "\\'")}')"><h3>📝 ${kuis.judul}</h3><p style="color:#1565c0; font-weight:bold; margin-top:5px;">Klik untuk mulai mengerjakan</p></div>`;
                         }
                     });
                 });
@@ -670,12 +760,7 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
                     const opC = soal.Pilihan_C || soal.Opsi_C || soal.opsi_c;
                     const opD = soal.Pilihan_D || soal.Opsi_D || soal.opsi_d;
 
-                    html += `<div class="question"><p><strong>${index + 1}. ${pertanyaan}</strong></p><div class="options">
-                            <label><input type="radio" name="q${index}" value="A"> A. ${opA}</label>
-                            <label><input type="radio" name="q${index}" value="B"> B. ${opB}</label>
-                            <label><input type="radio" name="q${index}" value="C"> C. ${opC}</label>
-                            <label><input type="radio" name="q${index}" value="D"> D. ${opD}</label>
-                        </div></div>`;
+                    html += `<div class="question"><p><strong>${index + 1}. ${pertanyaan}</strong></p><div class="options"><label><input type="radio" name="q${index}" value="A"> A. ${opA}</label><label><input type="radio" name="q${index}" value="B"> B. ${opB}</label><label><input type="radio" name="q${index}" value="C"> C. ${opC}</label><label><input type="radio" name="q${index}" value="D"> D. ${opD}</label></div></div>`;
                 } else {
                     html += `<div class="question"><p><strong>${index + 1}. [ESAI] ${pertanyaan}</strong></p><textarea name="q${index}" rows="4" placeholder="Ketik jawaban kamu di sini..."></textarea></div>`;
                 }
