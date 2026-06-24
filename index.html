@@ -59,7 +59,6 @@
         .admin-box-blue { background: #e3f2fd; padding: 20px; border-radius: 15px; border: 3px solid #2196f3; margin-bottom: 20px; }
         .admin-box-purple { background: #f3e5f5; padding: 20px; border-radius: 15px; border: 3px solid #9c27b0; margin-bottom: 20px; }
         
-        /* TAB NAVIGATION STYLES */
         .tab-menu { display: flex; gap: 5px; background: #2c3e50; padding: 10px; border-radius: 15px; margin-bottom: 20px; overflow-x: auto;}
         .tab-btn { background: transparent; border: none; color: #b0bec5; font-family: 'Fredoka One', cursive; padding: 10px 15px; margin: 0; width: auto; font-size: 14px; cursor: pointer; border-radius: 10px; white-space: nowrap;}
         .tab-btn:hover { background: #34495e; color: white; }
@@ -70,7 +69,7 @@
         .modal-overlay {
             position: fixed; top: 5%; left: 50%; transform: translate(-50%, 0);
             background: white; padding: 20px; border: 4px solid #333; z-index: 1000;
-            max-height: 90vh; overflow-y: auto; width: 90%; max-width: 600px;
+            max-height: 90vh; overflow-y: auto; width: 90%; max-width: 650px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
@@ -81,7 +80,6 @@
 
     <div class="container">
         
-        <!-- HALAMAN LOGIN -->
         <div id="login-section">
             <h1>Selamat Datang di Ujian Seru! 🎮</h1>
             <p style="text-align:center; font-weight:bold;">SMP Alam Bhumi Merdeka</p>
@@ -93,24 +91,20 @@
             <p id="error-msg" style="color:red; text-align:center; display:none;">Data tidak ditemukan! Coba lagi ya.</p>
         </div>
 
-        <!-- DASHBOARD SISWA -->
         <div id="student-dashboard" class="hidden">
             <h2>Ujian Tersedia, <span id="student-name"></span>! 📚</h2>
             <div id="quiz-list"></div>
         </div>
 
-        <!-- HALAMAN KUIS -->
         <div id="quiz-section" class="hidden">
             <h2 id="quiz-title-display">Judul Kuis</h2>
             <div id="questions-container"></div>
             <button onclick="submitQuiz()" class="btn-danger">Selesai & Kumpulkan! 🎯</button>
         </div>
 
-        <!-- DASHBOARD ADMIN (GURU) -->
         <div id="admin-section" class="hidden">
             <h2 class="no-print" style="margin-bottom: 10px;">Dashboard Guru 👩‍🏫</h2>
             
-            <!-- NAVIGASI TAB -->
             <div class="tab-menu no-print">
                 <button class="tab-btn active" onclick="bukaTab('tab-ujian', this)">📝 Ujian</button>
                 <button class="tab-btn" onclick="bukaTab('tab-nilai', this)">📊 Nilai</button>
@@ -119,7 +113,6 @@
                 <button class="tab-btn" onclick="bukaTab('tab-catatan', this)">📓 Catatan</button>
             </div>
 
-            <!-- ================= TAB 1: BANK SOAL & UPLOAD ================= -->
             <div id="tab-ujian" class="tab-content active">
                 <div class="admin-box no-print">
                     <h3>Upload Soal Baru (.CSV)</h3>
@@ -153,7 +146,6 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 2: REKAP NILAI ================= -->
             <div id="tab-nilai" class="tab-content">
                 <div class="admin-box-orange">
                     <h3 style="margin-top:0;">Rekap Nilai & Remedial Siswa</h3>
@@ -166,7 +158,6 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 3: MANAJEMEN PROFIL SISWA ================= -->
             <div id="tab-siswa" class="tab-content">
                 <div class="admin-box-blue no-print">
                     <h3 style="color: #0d47a1; margin-top:0;">Manajemen Profil Siswa 🧑‍🎓</h3>
@@ -192,7 +183,6 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 4: ABSENSI HARIAN ================= -->
             <div id="tab-absen" class="tab-content">
                 <div class="admin-box-purple no-print">
                     <h3 style="color: #6a1b9a; margin-top:0;">Absensi Harian Murid 📅</h3>
@@ -216,7 +206,6 @@
                 </div>
             </div>
 
-            <!-- ================= TAB 5: CATATAN GURU ================= -->
             <div id="tab-catatan" class="tab-content">
                 <div class="admin-box no-print" style="background:#fff9c4; border-color:#fbc02d;">
                     <h3 style="color: #f57f17; margin-top:0;">Buku Catatan Khusus Guru 📓</h3>
@@ -231,28 +220,24 @@
 
         </div>
 
-        <!-- MODAL HASIL -->
         <div id="result-section" class="hidden">
             <h2>Horee! Selesai! 🎉</h2>
             <h1 id="score-display" style="font-size: 50px;"></h1>
             <button onclick="location.reload()">Kembali ke Awal</button>
         </div>
 
-        <!-- MODAL PREVIEW UJIAN -->
         <div id="preview-modal" class="hidden no-print modal-overlay">
             <h2 id="preview-title">Preview</h2>
-            <div id="preview-content"></div>
+            <div id="preview-content" style="text-align:left;"></div>
             <button onclick="document.getElementById('preview-modal').classList.add('hidden')" class="btn-danger">Tutup</button>
         </div>
         
-        <!-- MODAL ANALISIS SOAL -->
         <div id="analisis-modal" class="hidden no-print modal-overlay">
             <h2 id="analisis-title">Analisis Kesulitan</h2>
-            <div id="analisis-content"></div>
+            <div id="analisis-content" style="text-align:left;"></div>
             <button onclick="document.getElementById('analisis-modal').classList.add('hidden')" class="btn-danger">Tutup</button>
         </div>
 
-        <!-- MODAL EDIT/TAMBAH SISWA LENGKAP -->
         <div id="edit-siswa-modal" class="hidden no-print modal-overlay">
             <h2 id="modal-siswa-title" style="color: #0d47a1; margin-top:0;">Data Siswa 🧑‍🎓</h2>
             <input type="hidden" id="edit-siswa-id">
@@ -278,30 +263,21 @@
 
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
     <script>
-        // INISIALISASI FIREBASE
-        const firebaseConfig = {
-            apiKey: "AIzaSyDs2FGY9UoKNYDbw9-OgKkGmR3IZ03UVWM",
-            authDomain: "smpalambhumimerdeka.firebaseapp.com",
-            projectId: "smpalambhumimerdeka",
-            storageBucket: "smpalambhumimerdeka.firebasestorage.app",
-            messagingSenderId: "743796561103",
-            appId: "1:743796561103:web:361177bf6dda593c0ed3ba"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // DATA SISWA BAWAAN SISTEM LAMA
+        const data_siswa_bawaan = [
+            { "nis": "0057", "nama": "Ahmad Hafidz Alfahri", "kelas": "VIII" }, { "nis": "0061", "nama": "Ahmad Wafi Ubaidillah", "kelas": "VIII" }, { "nis": "0060", "nama": "Alif Fiyan Wahyu Utomo", "kelas": "VIII" }, { "nis": "0036", "nama": "Aqhilla Ghaisani", "kelas": "VIII" }, { "nis": "0049", "nama": "Astrilia Jaunata H.", "kelas": "VIII" }, { "nis": "0035", "nama": "Ayyasy Hafizh Farhan", "kelas": "VIII" }, { "nis": "0056", "nama": "Azzahra Ragil Saputri", "kelas": "VIII" }, { "nis": "0047", "nama": "Belva Tania Setiawan", "kelas": "VIII" }, { "nis": "0063", "nama": "Brilliana Kharisma Mazidah", "kelas": "VIII" }, { "nis": "0055", "nama": "Ezza Valevi Tri Widianto", "kelas": "VIII" }, { "nis": "0033", "nama": "Fadhil Abyan Ruswanto", "kelas": "VIII" }, { "nis": "0051", "nama": "Faila Nuraini", "kelas": "VIII" }, { "nis": "0032", "nama": "Fauzia Yumna Farazza", "kelas": "VIII" }, { "nis": "0037", "nama": "Haris Afandi Kanang", "kelas": "VIII" }, { "nis": "0054", "nama": "Hisyam Arya Putra", "kelas": "VIII" }, { "nis": "0043", "nama": "Ilham Nurrofiq", "kelas": "VIII" }, { "nis": "0044", "nama": "Jennie Hafizha Wisista", "kelas": "VIII" }, { "nis": "0053", "nama": "Muhamad Akbar Nugroho", "kelas": "VIII" }, { "nis": "0042", "nama": "Muhamad Rafa Rizqi M.", "kelas": "VIII" }, { "nis": "0046", "nama": "Muhammad Rasydan Nur F.", "kelas": "VIII" }, { "nis": "0052", "nama": "Nizam Arifin", "kelas": "VIII" }, { "nis": "0038", "nama": "Novan El Fino", "kelas": "VIII" }, { "nis": "0064", "nama": "Nur Wahib", "kelas": "VIII" }, { "nis": "0039", "nama": "Razca Muhammad S.L.", "kelas": "VIII" }, { "nis": "0058", "nama": "Salma Aghnia", "kelas": "VIII" }, { "nis": "0058", "nama": "Siti Aida Maqbullah", "kelas": "VIII" }, { "nis": "0040", "nama": "Subkhan Kholid", "kelas": "VIII" }, { "nis": "0041", "nama": "Syaiful Amri", "kelas": "VIII" }, { "nis": "0050", "nama": "Uswatun Khasanah", "kelas": "VIII" }, { "nis": "0062", "nama": "Valerious Aylmer B.A.S.", "kelas": "VIII" }, { "nis": "0048", "nama": "Zidna Nu'ma Laila Rahma", "kelas": "VIII" }, { "nis": "0034", "nama": "Zizy Nabila Rizkisya Putri", "kelas": "VIII" },
+            { "nis": "0065", "nama": "Adiba Talita Yasmin", "kelas": "IX" }, { "nis": "0066", "nama": "Adzra Aqilah", "kelas": "IX" }, { "nis": "0067", "nama": "Ahmad Khanistio Andrean", "kelas": "IX" }, { "nis": "0068", "nama": "Ahmad Zadit Taqwa", "kelas": "IX" }, { "nis": "0069", "nama": "Ahsin Muhammad Nabil Alfayyadh", "kelas": "IX" }, { "nis": "0070", "nama": "Ananta Chandra Ferdiyansah", "kelas": "IX" }, { "nis": "0071", "nama": "Arzhavin Dafi Febriatna", "kelas": "IX" }, { "nis": "0072", "nama": "Atika Novara Adellia Putri", "kelas": "IX" }, { "nis": "0073", "nama": "Azka Faisal Ngabdurrohman", "kelas": "IX" }, { "nis": "0074", "nama": "Bagus Saddam A", "kelas": "IX" }, { "nis": "0075", "nama": "Dhiya Rif'ah Amalia", "kelas": "IX" }, { "nis": "0076", "nama": "Hana Nur Laila", "kelas": "IX" }, { "nis": "0077", "nama": "Jihan Alesya Anwar", "kelas": "IX" }, { "nis": "0078", "nama": "Kholisna Salwa Maulida", "kelas": "IX" }, { "nis": "0079", "nama": "Kiano Candra Sulaiman", "kelas": "IX" }, { "nis": "0080", "nama": "Maysarah Amira Hanan", "kelas": "IX" }, { "nis": "0081", "nama": "Meida Nabila Putri", "kelas": "IX" }, { "nis": "0082", "nama": "Miladia Firda Aqila", "kelas": "IX" }, { "nis": "0083", "nama": "Mirza Rizki Al Mahdani", "kelas": "IX" }, { "nis": "0084", "nama": "Muhamad Faqih Hidayat", "kelas": "IX" }, { "nis": "0085", "nama": "Muhammad Afif Mukti Wijaya", "kelas": "IX" }, { "nis": "0086", "nama": "Muhammad Arsyad Noufal Fadhil", "kelas": "IX" }, { "nis": "0087", "nama": "Muhammad El Sarawi Adli", "kelas": "IX" }, { "nis": "0088", "nama": "Muhammad Faerozi Afiq", "kelas": "IX" }, { "nis": "0089", "nama": "Muhammad Tsani", "kelas": "IX" }, { "nis": "0090", "nama": "Mukhammad Dika Tsaqiful Fikri", "kelas": "IX" }, { "nis": "0091", "nama": "Najwa Mar'atus Shalihah", "kelas": "IX" }, { "nis": "0092", "nama": "Naufal Radinka An Nafis", "kelas": "IX" }, { "nis": "0093", "nama": "Riska Arma Arrofi", "kelas": "IX" }, { "nis": "0094", "nama": "Safaraz Aufa Azalia", "kelas": "IX" }, { "nis": "0095", "nama": "Silvia Dwi Saputri", "kelas": "IX" }, { "nis": "0096", "nama": "Yusria Fildzah Gosshani", "kelas": "IX" }
+        ];
 
-        // FUNGSI TAB NAVIGASI
+        let data_siswa_tambahan = []; 
+        let currentUser = null; let currentQuizId = null; let currentQuestions = [];
+
         function bukaTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
-
             if(tabId === 'tab-catatan') loadCatatan();
         }
 
@@ -312,32 +288,16 @@
             alert("Perintah AI Berhasil Disalin!");
         }
 
-        // ================= DATA SISWA (BAWAAN) =================
-        const data_siswa_bawaan = [
-            { "nis": "0057", "nama": "Ahmad Hafidz Alfahri", "kelas": "VIII" }, { "nis": "0061", "nama": "Ahmad Wafi Ubaidillah", "kelas": "VIII" }, { "nis": "0060", "nama": "Alif Fiyan Wahyu Utomo", "kelas": "VIII" }, { "nis": "0036", "nama": "Aqhilla Ghaisani", "kelas": "VIII" }, { "nis": "0049", "nama": "Astrilia Jaunata H.", "kelas": "VIII" }, { "nis": "0035", "nama": "Ayyasy Hafizh Farhan", "kelas": "VIII" }, { "nis": "0056", "nama": "Azzahra Ragil Saputri", "kelas": "VIII" }, { "nis": "0047", "nama": "Belva Tania Setiawan", "kelas": "VIII" }, { "nis": "0063", "nama": "Brilliana Kharisma Mazidah", "kelas": "VIII" }, { "nis": "0055", "nama": "Ezza Valevi Tri Widianto", "kelas": "VIII" }, { "nis": "0033", "nama": "Fadhil Abyan Ruswanto", "kelas": "VIII" }, { "nis": "0051", "nama": "Faila Nuraini", "kelas": "VIII" }, { "nis": "0032", "nama": "Fauzia Yumna Farazza", "kelas": "VIII" }, { "nis": "0037", "nama": "Haris Afandi Kanang", "kelas": "VIII" }, { "nis": "0054", "nama": "Hisyam Arya Putra", "kelas": "VIII" }, { "nis": "0043", "nama": "Ilham Nurrofiq", "kelas": "VIII" }, { "nis": "0044", "nama": "Jennie Hafizha Wisista", "kelas": "VIII" }, { "nis": "0053", "nama": "Muhamad Akbar Nugroho", "kelas": "VIII" }, { "nis": "0042", "nama": "Muhamad Rafa Rizqi M.", "kelas": "VIII" }, { "nis": "0046", "nama": "Muhammad Rasydan Nur F.", "kelas": "VIII" }, { "nis": "0052", "nama": "Nizam Arifin", "kelas": "VIII" }, { "nis": "0038", "nama": "Novan El Fino", "kelas": "VIII" }, { "nis": "0064", "nama": "Nur Wahib", "kelas": "VIII" }, { "nis": "0039", "nama": "Razca Muhammad S.L.", "kelas": "VIII" }, { "nis": "0058", "nama": "Salma Aghnia", "kelas": "VIII" }, { "nis": "0058", "nama": "Siti Aida Maqbullah", "kelas": "VIII" }, { "nis": "0040", "nama": "Subkhan Kholid", "kelas": "VIII" }, { "nis": "0041", "nama": "Syaiful Amri", "kelas": "VIII" }, { "nis": "0050", "nama": "Uswatun Khasanah", "kelas": "VIII" }, { "nis": "0062", "nama": "Valerious Aylmer B.A.S.", "kelas": "VIII" }, { "nis": "0048", "nama": "Zidna Nu'ma Laila Rahma", "kelas": "VIII" }, { "nis": "0034", "nama": "Zizy Nabila Rizkisya Putri", "kelas": "VIII" },
-            { "nis": "0065", "nama": "Adiba Talita Yasmin", "kelas": "IX" }, { "nis": "0066", "nama": "Adzra Aqilah", "kelas": "IX" }, { "nis": "0067", "nama": "Ahmad Khanistio Andrean", "kelas": "IX" }, { "nis": "0068", "nama": "Ahmad Zadit Taqwa", "kelas": "IX" }, { "nis": "0069", "nama": "Ahsin Muhammad Nabil Alfayyadh", "kelas": "IX" }, { "nis": "0070", "nama": "Ananta Chandra Ferdiyansah", "kelas": "IX" }, { "nis": "0071", "nama": "Arzhavin Dafi Febriatna", "kelas": "IX" }, { "nis": "0072", "nama": "Atika Novara Adellia Putri", "kelas": "IX" }, { "nis": "0073", "nama": "Azka Faisal Ngabdurrohman", "kelas": "IX" }, { "nis": "0074", "nama": "Bagus Saddam A", "kelas": "IX" }, { "nis": "0075", "nama": "Dhiya Rif'ah Amalia", "kelas": "IX" }, { "nis": "0076", "nama": "Hana Nur Laila", "kelas": "IX" }, { "nis": "0077", "nama": "Jihan Alesya Anwar", "kelas": "IX" }, { "nis": "0078", "nama": "Kholisna Salwa Maulida", "kelas": "IX" }, { "nis": "0079", "nama": "Kiano Candra Sulaiman", "kelas": "IX" }, { "nis": "0080", "nama": "Maysarah Amira Hanan", "kelas": "IX" }, { "nis": "0081", "nama": "Meida Nabila Putri", "kelas": "IX" }, { "nis": "0082", "nama": "Miladia Firda Aqila", "kelas": "IX" }, { "nis": "0083", "nama": "Mirza Rizki Al Mahdani", "kelas": "IX" }, { "nis": "0084", "nama": "Muhamad Faqih Hidayat", "kelas": "IX" }, { "nis": "0085", "nama": "Muhammad Afif Mukti Wijaya", "kelas": "IX" }, { "nis": "0086", "nama": "Muhammad Arsyad Noufal Fadhil", "kelas": "IX" }, { "nis": "0087", "nama": "Muhammad El Sarawi Adli", "kelas": "IX" }, { "nis": "0088", "nama": "Muhammad Faerozi Afiq", "kelas": "IX" }, { "nis": "0089", "nama": "Muhammad Tsani", "kelas": "IX" }, { "nis": "0090", "nama": "Mukhammad Dika Tsaqiful Fikri", "kelas": "IX" }, { "nis": "0091", "nama": "Najwa Mar'atus Shalihah", "kelas": "IX" }, { "nis": "0092", "nama": "Naufal Radinka An Nafis", "kelas": "IX" }, { "nis": "0093", "nama": "Riska Arma Arrofi", "kelas": "IX" }, { "nis": "0094", "nama": "Safaraz Aufa Azalia", "kelas": "IX" }, { "nis": "0095", "nama": "Silvia Dwi Saputri", "kelas": "IX" }, { "nis": "0096", "nama": "Yusria Fildzah Gosshani", "kelas": "IX" }
-        ];
-
-        let data_siswa_tambahan = []; 
-        let currentUser = null; let currentQuizId = null; let currentQuestions = [];
-
-        // FUNGSI GABUNG DATA SISWA (Firebse menimpa data bawaan jika NIS sama)
         function getCombinedSiswa() {
             let mapSiswa = {};
             data_siswa_bawaan.forEach(s => { 
                 mapSiswa[s.nis] = { id: "BAWAAN", sumber: "Sistem", alamat: "-", nama_ortu: "-", ...s }; 
             });
             data_siswa_tambahan.forEach(s => { 
-                mapSiswa[s.nis] = { ...mapSiswa[s.nis], ...s, sumber: "Diubah/Manual" }; 
+                mapSiswa[s.nis] = { ...mapSiswa[s.nis], ...s, sumber: s.sumber || "Manual" }; 
             });
             return Object.values(mapSiswa).sort((a,b) => a.nama.localeCompare(b.nama));
         }
-
-        db.collection("data_siswa_tambahan").get().then((snapshot) => {
-            snapshot.forEach(doc => { data_siswa_tambahan.push({ id: doc.id, ...doc.data() }); });
-            // Set default Tgl Absen ke hari ini
-            document.getElementById('tgl-absen').valueAsDate = new Date();
-        });
 
         function login() {
             const input = document.getElementById('login-input').value.trim();
@@ -347,10 +307,8 @@
                 loadQuizzesForAdmin(); loadHasil(); renderTabelSiswa(); 
                 return;
             }
-            
             const allSiswa = getCombinedSiswa();
             const siswa = allSiswa.find(s => s.nis === input || s.nama.toLowerCase() === input.toLowerCase());
-            
             if(siswa) {
                 currentUser = siswa;
                 document.getElementById('student-name').innerText = siswa.nama;
@@ -360,7 +318,7 @@
             } else { document.getElementById('error-msg').style.display = "block"; }
         }
 
-        // ================= MANAJEMEN SISWA & PROFIL =================
+        // ================= TAB SISWA (FITUR EDIT AKTIF) =================
         function bukaModalTambahSiswa() {
             document.getElementById('modal-siswa-title').innerText = "Tambah Siswa Baru";
             document.getElementById('edit-siswa-id').value = "BARU";
@@ -392,31 +350,31 @@
 
             if(!nis || !nama) { alert("NIS dan Nama wajib diisi!"); return; }
 
-            const payload = { nis: nis, nama: nama, kelas: kelas, nama_ortu: ortu, alamat: alamat, waktu: firebase.firestore.FieldValue.serverTimestamp() };
+            const payload = { nis: nis, nama: nama, kelas: kelas, nama_ortu: ortu, alamat: alamat, sumber: id === "BAWAAN" ? "Sistem Modif" : "Manual", waktu: firebase.firestore.FieldValue.serverTimestamp() };
 
-            if(id === "BAWAAN" || id === "BARU") {
-                // Tambah ke database (jika BAWAAN, NIS sama akan menimpa via fungsi getCombinedSiswa)
+            if(id === "BARU") {
+                db.collection("data_siswa_tambahan").add(payload).then(refreshSiswaLokal);
+            } else if (id === "BAWAAN") {
                 db.collection("data_siswa_tambahan").add(payload).then(refreshSiswaLokal);
             } else {
-                // Update dokumen
-                db.collection("data_siswa_tambahan").doc(id).update(payload).then(refreshSiswaLokal);
-            }
-        }
-
-        function hapusSiswaManual(docId, nama) {
-            if(confirm(`Yakin hapus data siswa: ${nama}?`)) {
-                db.collection("data_siswa_tambahan").doc(docId).delete().then(refreshSiswaLokal);
+                db.collection("data_siswa_tambahan").doc(id).update({ nis: nis, nama: nama, kelas: kelas, nama_ortu: ortu, alamat: alamat }).then(refreshSiswaLokal);
             }
         }
 
         function refreshSiswaLokal() {
-            alert("Data Siswa Tersimpan!");
+            alert("Data Profil Siswa Berhasil Disimpan!");
             document.getElementById('edit-siswa-modal').classList.add('hidden');
             db.collection("data_siswa_tambahan").get().then((snapshot) => {
                 data_siswa_tambahan = [];
                 snapshot.forEach(doc => { data_siswa_tambahan.push({ id: doc.id, ...doc.data() }); });
                 renderTabelSiswa();
             });
+        }
+
+        function hapusSiswaManual(docId, nama) {
+            if(confirm(`Yakin hapus data siswa manual: ${nama}?`)) {
+                db.collection("data_siswa_tambahan").doc(docId).delete().then(refreshSiswaLokal);
+            }
         }
 
         function renderTabelSiswa() {
@@ -427,21 +385,21 @@
             let combined = getCombinedSiswa();
             if(filterKelas !== "ALL") combined = combined.filter(s => s.kelas === filterKelas);
 
-            if(combined.length === 0) { tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Belum ada siswa di kelas ini.</td></tr>"; return; }
+            if(combined.length === 0) { tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Belum ada data murid.</td></tr>"; return; }
 
             combined.forEach(s => {
                 const sAlamat = s.alamat.replace(/'/g, "\\'"); const sOrtu = s.nama_ortu.replace(/'/g, "\\'"); const sNama = s.nama.replace(/'/g, "\\'");
-                
-                let btnHapus = s.id === "BAWAAN" ? "" : `<button onclick="hapusSiswaManual('${s.id}', '${sNama}')" style="background:#ef5350; border-color:#c62828; padding:3px 6px; font-size:11px; margin:0;">Hapus</button>`;
-                
+                let btnHapus = (s.id === "BAWAAN" || s.sumber === "Sistem Modif") ? "" : `<button onclick="hapusSiswaManual('${s.id}', '${sNama}')" style="background:#ef5350; border-color:#c62828; padding:3px 6px; font-size:11px; margin:0;">Hapus</button>`;
+                let chipText = (s.id === "BAWAAN") ? "Sistem" : "Custom";
+
                 tbody.innerHTML += `
                     <tr>
                         <td style="text-align:center;">${s.nis}</td>
-                        <td><strong>${s.nama}</strong><br><span style="font-size:10px; color:#555;">📍 ${s.alamat}</span></td>
-                        <td style="text-align:center;">${s.kelas}</td>
+                        <td><strong>${s.nama}</strong><br><span style="font-size:10px; color:#666;">📍 ${s.alamat}</span></td>
+                        <td style="text-align:center;"><span style="background:#f0f4f8; padding:2px 5px; border-radius:4px;">${s.kelas}</span></td>
                         <td>${s.nama_ortu}</td>
                         <td style="white-space:nowrap;">
-                           <button onclick="bukaEditSiswa('${s.id}', '${s.nis}', '${sNama}', '${s.kelas}', '${sOrtu}', '${sAlamat}')" style="background:#ff9800; border-color:#f57c00; padding:3px 6px; font-size:11px; margin:0 2px 0 0;">Edit</button>
+                           <button onclick="bukaEditSiswa('${s.id}', '${s.nis}', '${sNama}', '${s.kelas}', '${sOrtu}', '${sAlamat}')" style="background:#ff9800; border-color:#f57c00; padding:3px 6px; font-size:11px; margin:0 2px 0 0;">Edit ✏️</button>
                            ${btnHapus}
                         </td>
                     </tr>
@@ -449,167 +407,235 @@
             });
         }
 
-        // ================= FITUR ABSENSI =================
-        function loadFormAbsensi() {
-            const tgl = document.getElementById('tgl-absen').value;
-            const kls = document.getElementById('kelas-absen').value;
-            if(!tgl) { alert("Pilih tanggal dulu!"); return; }
+        // ================= TAB 1: OPERASIONAL SOAL UJIAN (AKTIF PENUH) =================
+        function previewQuiz(quizId, judul) {
+            document.getElementById('preview-title').innerText = "Detail Soal: " + judul;
+            document.getElementById('preview-modal').classList.remove('hidden');
+            const contentDiv = document.getElementById('preview-content');
+            contentDiv.innerHTML = "<p>Memuat butir soal...</p>";
 
-            document.getElementById('area-absen').classList.remove('hidden');
-            const tbody = document.querySelector("#table-absen tbody");
-            tbody.innerHTML = "<tr><td colspan='2'>Memuat data absensi...</td></tr>";
+            db.collection("bank_soal").doc(quizId).get().then((doc) => {
+                if(doc.exists) {
+                    const soalData = doc.data().soal;
+                    let html = "";
+                    soalData.forEach((s, idx) => {
+                        const isPG = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase().includes("ganda") || (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase() === "pg";
+                        const pertanyaan = s.Pertanyaan || s.pertanyaan;
+                        if (isPG) {
+                            const kunci = (s.Kunci_Jawaban || s.Jawaban_Benar || s.jawaban_benar || "Tidak Diset").toUpperCase();
+                            html += `<div style="background: #f5f5f5; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ddd;"><p style="margin:0 0 10px 0;"><strong>${idx + 1}. ${pertanyaan}</strong></p><p style="margin:0; font-size: 14px;">A. ${s.Pilihan_A || s.Opsi_A || s.opsi_a || ''}</p><p style="margin:0; font-size: 14px;">B. ${s.Pilihan_B || s.Opsi_B || s.opsi_b || ''}</p><p style="margin:0; font-size: 14px;">C. ${s.Pilihan_C || s.Opsi_C || s.opsi_c || ''}</p><p style="margin:0; font-size: 14px;">D. ${s.Pilihan_D || s.Opsi_D || s.opsi_d || ''}</p><p style="margin:10px 0 0 0; color: #2e7d32; font-weight: bold;">Kunci Jawaban: ${kunci}</p></div>`;
+                        } else {
+                            html += `<div style="background: #fff3e0; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ffcc80;"><p style="margin:0;"><strong>${idx + 1}. [ESAI] ${pertanyaan}</strong></p></div>`;
+                        }
+                    });
+                    contentDiv.innerHTML = html;
+                }
+            });
+        }
 
-            const docId = `${tgl}_${kls}`;
-            db.collection("absensi").doc(docId).get().then(doc => {
-                let dbAbsen = {};
-                if(doc.exists) dbAbsen = doc.data().data_kehadiran || {};
+        function downloadQuizAsDocx(quizId, judul) {
+            db.collection("bank_soal").doc(quizId).get().then((doc) => {
+                if (!doc.exists) return;
+                const data = doc.data(); const soalData = data.soal || []; const targetKelas = data.kelas || "VIII";
 
-                let siswaKelas = getCombinedSiswa().filter(s => s.kelas === kls);
+                let htmlContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><title>${data.judul}</title><style>body { font-family: 'Arial', sans-serif; font-size: 12pt; line-height: 1.25; } .kop-surat { text-align: center; margin-bottom: 20px; border-bottom: 3px double #000; padding-bottom: 5px; } .kop-title { font-size: 16pt; font-weight: bold; margin: 0; } .kop-subtitle { font-size: 12pt; font-weight: bold; margin: 0; text-transform: uppercase; } .info-table { width: 100%; margin-bottom: 20px; font-size: 11pt; border: none; } .soal-container { margin-bottom: 15px; page-break-inside: avoid; } .pertanyaan { font-weight: normal; margin: 0 0 5px 0; } .opsi-table { margin-left: 15px; width: 100%; border: none; } .opsi-item { padding: 2px 0; width: 50%; vertical-align: top; }</style></head><body><div class="kop-surat"><p class="kop-title">SMP ALAM BHUMI MERDEKA</p><p class="kop-subtitle">LEMBAR SOAL UJIAN SEKOLAH</p><p style="margin:0; font-size:10pt; font-style:italic;">Tahun Ajaran 2026/2027</p></div><table class="info-table"><tr><td style="width: 15%;">Mata Pelajaran</td><td style="width: 2%;">:</td><td><strong>${data.judul}</strong></td><td style="width: 10%;">Nama</td><td style="width: 2%;">:</td><td>.................................</td></tr><tr><td>Kelas</td><td>:</td><td>${targetKelas}</td><td>NIS</td><td>:</td><td>.................................</td></tr></table><h4 style="border-bottom: 1px solid #000; padding-bottom: 3px;">I. Pilihan Ganda</h4>`;
+
+                let pgCount = 0; let esaiCount = 0; let esaiHtml = "";
+                soalData.forEach((s) => {
+                    const isPG = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase().includes("ganda") || (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase() === "pg";
+                    const pertanyaan = s.Pertanyaan || s.pertanyaan || "";
+                    if (isPG) {
+                        pgCount++;
+                        htmlContent += `<div class="soal-container"><p class="pertanyaan">${pgCount}. ${pertanyaan}</p><table class="opsi-table"><tr><td class="opsi-item">A. ${s.Pilihan_A || s.Opsi_A || ''}</td><td class="opsi-item">B. ${s.Pilihan_B || s.Opsi_B || ''}</td></tr><tr><td class="opsi-item">C. ${s.Pilihan_C || s.Opsi_C || ''}</td><td class="opsi-item">D. ${s.Pilihan_D || s.Opsi_D || ''}</td></tr></table></div>`;
+                    } else {
+                        esaiCount++;
+                        if (esaiCount === 1) esaiHtml += `<h4 style="border-bottom:1px solid #000; padding-bottom:3px; margin-top:30px;">II. Uraian / Esai</h4>`;
+                        esaiHtml += `<div class="soal-container"><p class="pertanyaan">${esaiCount}. ${pertanyaan}</p><br/><br/><br/></div>`;
+                    }
+                });
+                htmlContent += esaiHtml + `</body></html>`;
+                const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword' });
+                const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `SOAL_${data.judul.toUpperCase().replace(/\s+/g, '_')}.doc`;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            });
+        }
+
+        function analisisSoal(quizId, judul) {
+            document.getElementById('analisis-title').innerText = "Analisis Kesulitan: " + judul;
+            document.getElementById('analisis-modal').classList.remove('hidden');
+            const contentDiv = document.getElementById('analisis-content');
+            contentDiv.innerHTML = "<p>Menghitung performa statistik jawaban...</p>";
+
+            db.collection("bank_soal").doc(quizId).get().then(quizDoc => {
+                if(!quizDoc.exists) return;
+                const soalData = quizDoc.data().soal;
+                db.collection("hasil_ujian").where("quiz_id", "==", quizId).get().then(hasilSnap => {
+                    const totalSiswa = hasilSnap.size;
+                    if(totalSiswa === 0) { contentDiv.innerHTML = "<p>Belum ada siswa yang merampungkan ujian ini.</p>"; return; }
+
+                    let stats = {};
+                    hasilSnap.forEach(doc => {
+                        const jawaban_pg = doc.data().jawaban_pg || {};
+                        soalData.forEach((s, idx) => {
+                            const isPG = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase().includes("ganda") || (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase() === "pg";
+                            if(isPG) {
+                                const key = `soal_${idx+1}`;
+                                if(!stats[key]) stats[key] = { benar: 0, salah: 0, teks: (s.Pertanyaan || s.pertanyaan) };
+                                const kunci = (s.Kunci_Jawaban || s.Jawaban_Benar || "").toUpperCase().trim();
+                                if((jawaban_pg[key] || "").toUpperCase().trim() === kunci) stats[key].benar++; else stats[key].salah++;
+                            }
+                        });
+                    });
+
+                    let html = `<p>Siswa Masuk Data: <strong>${totalSiswa} Orang</strong></p><table><tr style='background:#ab47bc; color:white;'><th>No</th><th>Soal</th><th>%Benar</th><th>Evaluasi</th></tr>`;
+                    soalData.forEach((s, idx) => {
+                        const key = `soal_${idx+1}`;
+                        if(stats[key]) {
+                            const pct = Math.round((stats[key].benar / totalSiswa) * 100);
+                            let lbl = pct <= 45 ? "⚠️ Sulit (Ulangi)" : pct >= 85 ? "🌟 Sangat Mudah" : "✅ Normal";
+                            let bg = pct <= 45 ? "#ffebee" : pct >= 85 ? "#e8f5e9" : "white";
+                            html += `<tr style="background:${bg};"><td>${idx+1}</td><td>${stats[key].teks.substring(0,40)}...</td><td><strong>${pct}%</strong></td><td>${lbl}</td></tr>`;
+                        }
+                    });
+                    contentDiv.innerHTML = html + "</table>";
+                });
+            });
+        }
+
+        function uploadCSV() {
+            const fileInput = document.getElementById('csv-file'); const titleInput = document.getElementById('quiz-title').value; const kelasInput = document.getElementById('quiz-kelas').value;
+            if (!fileInput.files[0] || titleInput === "") { alert("Isi Judul dan Pilih File CSV dulu!"); return; }
+            Papa.parse(fileInput.files[0], { header: true, skipEmptyLines: true, complete: function(results) {
+                db.collection("bank_soal").add({ judul: titleInput, kelas: kelasInput, soal: results.data, status_aktif: false, dibuat_pada: firebase.firestore.FieldValue.serverTimestamp() })
+                  .then(() => { alert("Soal Berhasil Di-upload!"); document.getElementById('quiz-title').value = ""; fileInput.value = ""; loadQuizzesForAdmin(); });
+            }});
+        }
+
+        function loadQuizzesForAdmin() {
+            const tbody = document.querySelector("#table-bank-soal tbody"); tbody.innerHTML = "<tr><td>Loading...</td></tr>";
+            db.collection("bank_soal").orderBy("dibuat_pada", "desc").get().then((snapshot) => {
+                tbody.innerHTML = snapshot.empty ? "<tr><td colspan='3'>Belum ada soal terkirim.</td></tr>" : "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data(); const safeJudul = data.judul.replace(/'/g, "\\'");
+                    const isActive = !!data.status_aktif; const statusText = isActive ? 'AKTIF 🟢' : 'MATI 🔴'; const statusColor = isActive ? '#4caf50' : '#9e9e9e';
+                    tbody.innerHTML += `<tr><td><strong>${data.judul}</strong><br><span style="background:#e0f7fa; padding:2px 4px; border-radius:4px; font-size:10px;">Kls ${data.kelas||'VIII'}</span></td>
+                        <td style="text-align:center;"><button onclick="toggleQuizStatus('${doc.id}', ${isActive})" style="background-color:${statusColor}; border-color:#333; padding:4px; font-size:11px; width:100%; margin:0;">${statusText}</button></td>
+                        <td style="white-space:nowrap;"><button onclick="previewQuiz('${doc.id}', '${safeJudul}')" style="background:#29b6f6; padding:4px 6px; font-size:11px; margin:0 2px 0 0; width:auto; display:inline-block;">Lihat 👁️</button><button onclick="downloadQuizAsDocx('${doc.id}', '${safeJudul}')" style="background:#4caf50; padding:4px 6px; font-size:11px; margin:0 2px 0 0; width:auto; display:inline-block;">Word 📄</button><button onclick="analisisSoal('${doc.id}', '${safeJudul}')" style="background:#ab47bc; padding:4px 6px; font-size:11px; margin:0 2px 0 0; width:auto; display:inline-block;">Analisis 📊</button><button onclick="deleteQuiz('${doc.id}', '${safeJudul}')" class="btn-danger" style="padding:4px 6px; font-size:11px; margin:0; width:auto; display:inline-block;">Hapus</button></td></tr>`;
+                });
+            });
+        }
+        function toggleQuizStatus(quizId, currentStatus) { db.collection("bank_soal").doc(quizId).update({ status_aktif: !currentStatus }).then(loadQuizzesForAdmin); }
+        function deleteQuiz(quizId, judul) { if (confirm(`Hapus kuis "${judul}"?`)) { db.collection("bank_soal").doc(quizId).delete().then(loadQuizzesForAdmin); } }
+
+        // ================= TAB 2: OPERASIONAL REKAP NILAI (AKTIF PENUH) =================
+        function lihatDetailJawaban(docId) {
+            document.getElementById('preview-title').innerText = "Detail Jawaban Murid";
+            document.getElementById('preview-modal').classList.remove('hidden');
+            const contentDiv = document.getElementById('preview-content'); contentDiv.innerHTML = "<p>Memuat koreksi jawaban...</p>";
+
+            db.collection("hasil_ujian").doc(docId).get().then((hasilDoc) => {
+                if (!hasilDoc.exists) return;
+                const hasilData = hasilDoc.data(); const jawabanPG = hasilData.jawaban_pg || null; const jawabanEsai = hasilData.jawaban_esai || {};
+                document.getElementById('preview-title').innerText = `Koreksi Jawaban: ${hasilData.nama}`;
+
+                db.collection("bank_soal").doc(hasilData.quiz_id).get().then((quizDoc) => {
+                    if (!quizDoc.exists) { contentDiv.innerHTML = "<p style='color:red;'>Bank soal induk sudah dihapus.</p>"; return; }
+                    const soalData = quizDoc.data().soal;
+                    let html = `<div style="background:#e0f2f1; padding:10px; border-radius:8px; margin-bottom:10px;"><strong>Ujian:</strong> ${hasilData.judul_kuis}<br><strong>Skor PG:</strong> ${hasilData.nilai_pg}</div>`;
+                    
+                    soalData.forEach((s, idx) => {
+                        const isPG = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase().includes("ganda") || (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase() === "pg";
+                        const key = `soal_${idx + 1}`;
+                        if (isPG) {
+                            const kunci = (s.Kunci_Jawaban || s.Jawaban_Benar || "").toUpperCase().trim();
+                            const mhsJawab = (jawabanPG ? jawabanPG[key] : "") .toUpperCase().trim();
+                            const isBenar = mhsJawab === kunci;
+                            let statusText = isBenar ? `<span style="color:green; font-weight:bold;">✅ BENAR</span>` : `<span style="color:red; font-weight:bold;">❌ SALAH</span>`;
+                            if (!mhsJawab) statusText = `<span style="color:orange; font-weight:bold;">⚠️ KOSONG</span>`;
+
+                            html += `<div style="border-bottom:1px dashed #ccc; padding:8px 0;"><p style="margin:0;"><strong>${idx+1}. ${s.Pertanyaan||s.pertanyaan}</strong></p><p style="margin:3px 0 0 0; font-size:13px;">Jawab: ${mhsJawab || 'Tidak diisi'} | Kunci: <strong style="color:blue;">${kunci}</strong> -> ${statusText}</p></div>`;
+                        } else {
+                            html += `<div style="background:#fff3e0; padding:8px; border-radius:5px; margin-top:5px;"><p style="margin:0;"><strong>${idx+1}. [ESAI] ${s.Pertanyaan||s.pertanyaan}</strong></p><p style="margin:3px 0 0 0; background:white; padding:5px; border-radius:4px; font-size:13px;"><b>Jawaban Siswa:</b><br>${jawabanEsai[key] || '<i>Kosong</i>'}</p></div>`;
+                        }
+                    });
+                    contentDiv.innerHTML = html;
+                });
+            });
+        }
+
+        function loadHasil() {
+            const tbody = document.querySelector("#table-nilai tbody"); tbody.innerHTML = "<tr><td>Loading...</td></tr>";
+            db.collection("hasil_ujian").orderBy("waktu", "desc").get().then((snapshot) => {
                 tbody.innerHTML = "";
-                
-                if(siswaKelas.length === 0) { tbody.innerHTML = "<tr><td colspan='2'>Tidak ada siswa di kelas ini.</td></tr>"; return; }
+                snapshot.forEach((doc) => {
+                    const data = doc.data(); const safeNama = data.nama.replace(/'/g, "\\'");
+                    tbody.innerHTML += `<tr><td><span style="font-size:11px;">${data.judul_kuis}</span></td><td><strong>${data.nama}</strong></td><td style="text-align:center;">${data.kelas}</td><td style="text-align:center;"><strong style="color:#d84315;">${data.nilai_pg}</strong></td><td class="no-print" style="white-space:nowrap; text-align:center;"><button onclick="lihatDetailJawaban('${doc.id}')" style="background:#29b6f6; padding:4px 6px; font-size:11px; margin:0 2px 0 0; width:auto; display:inline-block;">Detail 🔍</button><button onclick="hapusDanRemedial('${doc.id}', '${safeNama}', '${data.judul_kuis.replace(/'/g, "\\'")}')" style="background:#ff9800; padding:4px 6px; font-size:11px; width:auto; margin:0; display:inline-block;">Remedial 🔄</button></td></tr>`;
+                });
+            });
+        }
+        function hapusDanRemedial(docId, nama, judul) { if(confirm(`Hapus nilai & remedial siswa ${nama} di ujian ${judul}?`)) db.collection("hasil_ujian").doc(docId).delete().then(loadHasil); }
 
-                siswaKelas.forEach((s, idx) => {
-                    const status = dbAbsen[s.nis] || "H"; // Default Hadir
-                    tbody.innerHTML += `
-                        <tr style="border-bottom: 1px solid #eee;">
-                            <td><strong>${s.nama}</strong><br><span style="font-size:10px;">NIS: ${s.nis}</span></td>
-                            <td>
-                                <div style="display:flex; gap:8px; font-size:12px;">
-                                    <label><input type="radio" name="abs_${s.nis}" value="H" ${status==='H'?'checked':''}> Hadir</label>
-                                    <label><input type="radio" name="abs_${s.nis}" value="S" ${status==='S'?'checked':''}> Sakit</label>
-                                    <label><input type="radio" name="abs_${s.nis}" value="I" ${status==='I'?'checked':''}> Izin</label>
-                                    <label><input type="radio" name="abs_${s.nis}" value="A" ${status==='A'?'checked':''}> Alpa</label>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
+        // ================= TAB 4: ABSENSI HARIAN MURNI =================
+        function loadFormAbsensi() {
+            const tgl = document.getElementById('tgl-absen').value; const kls = document.getElementById('kelas-absen').value;
+            if(!tgl) { alert("Pilih tanggal dulu!"); return; }
+            document.getElementById('area-absen').classList.remove('hidden');
+            const tbody = document.querySelector("#table-absen tbody"); tbody.innerHTML = "<tr><td>Loading data absen...</td></tr>";
+
+            db.collection("absensi").doc(`${tgl}_${kls}`).get().then(doc => {
+                let dbAbsen = doc.exists ? doc.data().data_kehadiran || {} : {};
+                let siswaKelas = getCombinedSiswa().filter(s => s.kelas === kls); tbody.innerHTML = "";
+                if(siswaKelas.length === 0) { tbody.innerHTML = "<tr><td>Tidak ada siswa di kelas ini.</td></tr>"; return; }
+
+                siswaKelas.forEach((s) => {
+                    const status = dbAbsen[s.nis] || "H";
+                    tbody.innerHTML += `<tr><td><strong>${s.nama}</strong></td><td>
+                        <div style="display:flex; gap:8px;"><label><input type="radio" name="abs_${s.nis}" value="H" ${status==='H'?'checked':''}> H</label>
+                        <label><input type="radio" name="abs_${s.nis}" value="S" ${status==='S'?'checked':''}> S</label>
+                        <label><input type="radio" name="abs_${s.nis}" value="I" ${status==='I'?'checked':''}> I</label>
+                        <label><input type="radio" name="abs_${s.nis}" value="A" ${status==='A'?'checked':''}> A</label></div></td></tr>`;
                 });
             });
         }
 
         function simpanAbsensi() {
-            const tgl = document.getElementById('tgl-absen').value;
-            const kls = document.getElementById('kelas-absen').value;
-            const docId = `${tgl}_${kls}`;
-            
-            let siswaKelas = getCombinedSiswa().filter(s => s.kelas === kls);
-            let data_kehadiran = {};
-
+            const tgl = document.getElementById('tgl-absen').value; const kls = document.getElementById('kelas-absen').value;
+            let siswaKelas = getCombinedSiswa().filter(s => s.kelas === kls); let data_kehadiran = {};
             siswaKelas.forEach(s => {
                 const radios = document.getElementsByName(`abs_${s.nis}`);
                 for(let r of radios) { if(r.checked) { data_kehadiran[s.nis] = r.value; break; } }
             });
-
-            db.collection("absensi").doc(docId).set({
-                tanggal: tgl, kelas: kls,
-                data_kehadiran: data_kehadiran,
-                waktu_update: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => { alert("Data Absensi Berhasil Disimpan!"); })
-              .catch(err => alert("Gagal nyimpan absen: " + err.message));
+            db.collection("absensi").doc(`${tgl}_${kls}`).set({ tanggal: tgl, kelas: kls, data_kehadiran: data_kehadiran, waktu_update: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { alert("Absensi Tersimpan!"); });
         }
 
-        // ================= FITUR BUKU CATATAN GURU =================
+        // ================= TAB 5: CATATAN UTUHAN =================
         function simpanCatatan() {
-            const isi = document.getElementById('input-catatan').value.trim();
-            if(!isi) return;
-            
-            db.collection("catatan_guru").add({
-                isi: isi,
-                waktu: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                document.getElementById('input-catatan').value = "";
-                loadCatatan();
-            });
+            const isi = document.getElementById('input-catatan').value.trim(); if(!isi) return;
+            db.collection("catatan_guru").add({ isi: isi, waktu: firebase.firestore.FieldValue.serverTimestamp() }).then(() => { document.getElementById('input-catatan').value = ""; loadCatatan(); });
         }
-
         function loadCatatan() {
-            const listDiv = document.getElementById('list-catatan');
-            listDiv.innerHTML = "Memuat catatan...";
+            const listDiv = document.getElementById('list-catatan'); listDiv.innerHTML = "Loading...";
             db.collection("catatan_guru").orderBy("waktu", "desc").get().then(snap => {
-                listDiv.innerHTML = "";
-                if(snap.empty) { listDiv.innerHTML = "<p style='color:#888;'>Belum ada catatan.</p>"; return; }
+                listDiv.innerHTML = snap.empty ? "<p style='color:#888;'>Belum ada catatan.</p>" : "";
                 snap.forEach(doc => {
-                    const data = doc.data();
-                    let tglStr = "Baru saja";
-                    if(data.waktu) {
-                        const d = data.waktu.toDate();
-                        tglStr = d.toLocaleDateString('id-ID') + " " + d.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
-                    }
-                    listDiv.innerHTML += `
-                        <div style="background:white; padding:15px; border-radius:10px; border:1px solid #fbc02d; position:relative;">
-                            <span style="font-size:10px; color:#999; display:block; margin-bottom:5px;">🕒 ${tglStr}</span>
-                            <p style="margin:0; font-size:14px; white-space:pre-wrap;">${data.isi}</p>
-                            <button onclick="hapusCatatan('${doc.id}')" style="position:absolute; top:10px; right:10px; padding:2px 5px; font-size:10px; width:auto; margin:0; background:#ef5350; border:none;">Hapus</button>
-                        </div>
-                    `;
+                    const data = doc.data(); let tglStr = data.waktu ? data.waktu.toDate().toLocaleDateString('id-ID') : "Baru saja";
+                    listDiv.innerHTML += `<div style="background:white; padding:10px; border-radius:8px; border:1px solid #fbc02d; position:relative;"><span style="font-size:10px; color:#999;">🕒 ${tglStr}</span><p style="margin:5px 0 0 0; font-size:13px;">${data.isi}</p><button onclick="hapusCatatan('${doc.id}')" style="position:absolute; top:5px; right:5px; padding:2px 5px; font-size:9px; width:auto; margin:0; background:#ef5350; border:none;">Hapus</button></div>`;
                 });
             });
         }
+        function hapusCatatan(id) { if(confirm("Hapus catatan ini?")) db.collection("catatan_guru").doc(id).delete().then(loadCatatan); }
 
-        function hapusCatatan(id) {
-            if(confirm("Hapus catatan ini?")) {
-                db.collection("catatan_guru").doc(id).delete().then(loadCatatan);
-            }
-        }
-
-        // ================= UJIAN & BANK SOAL (ADMIN) =================
-        function uploadCSV() {
-            const fileInput = document.getElementById('csv-file');
-            const titleInput = document.getElementById('quiz-title').value;
-            const kelasInput = document.getElementById('quiz-kelas').value;
-            if (!fileInput.files[0] || titleInput === "") { alert("Isi Judul dan Pilih File CSV dulu!"); return; }
-
-            Papa.parse(fileInput.files[0], { header: true, skipEmptyLines: true, complete: function(results) {
-                db.collection("bank_soal").add({ judul: titleInput, kelas: kelasInput, soal: results.data, status_aktif: false, dibuat_pada: firebase.firestore.FieldValue.serverTimestamp() })
-                  .then(() => { alert("Soal berhasil di-upload!"); document.getElementById('quiz-title').value = ""; fileInput.value = ""; loadQuizzesForAdmin(); });
-            }});
-        }
-
-        function loadQuizzesForAdmin() {
-            const tbody = document.querySelector("#table-bank-soal tbody");
-            db.collection("bank_soal").orderBy("dibuat_pada", "desc").get().then((snapshot) => {
-                tbody.innerHTML = "";
-                snapshot.forEach((doc) => {
-                    const data = doc.data(); const safeJudul = data.judul.replace(/'/g, "\\'");
-                    const isActive = !!data.status_aktif; const statusText = isActive ? 'AKTIF 🟢' : 'MATI 🔴'; const statusColor = isActive ? '#4caf50' : '#9e9e9e';
-                    tbody.innerHTML += `<tr><td><strong>${data.judul}</strong><br><span style="font-size:10px; background:#e0f7fa; padding:2px 4px; border-radius:4px;">Kls ${data.kelas||"VIII"}</span> (${data.soal?data.soal.length:0} Soal)</td>
-                        <td style="text-align:center;"><button onclick="toggleQuizStatus('${doc.id}', ${isActive})" style="background-color:${statusColor}; border-color:#333; padding:4px; font-size:11px; width:100%; margin:0;">${statusText}</button></td>
-                        <td style="white-space:nowrap;"><button onclick="previewQuiz('${doc.id}', '${safeJudul}')" style="background:#29b6f6; border-color:#0277bd; padding:4px 6px; font-size:11px; margin:0 2px 2px 0; width:auto; display:inline-block;">Lihat</button><button onclick="downloadQuizAsDocx('${doc.id}', '${safeJudul}')" style="background:#4caf50; border-color:#388e3c; padding:4px 6px; font-size:11px; margin:0 2px 2px 0; width:auto; display:inline-block;">Word</button><button onclick="analisisSoal('${doc.id}', '${safeJudul}')" style="background:#ab47bc; border-color:#7b1fa2; padding:4px 6px; font-size:11px; margin:0 2px 2px 0; width:auto; display:inline-block;">Analisis</button><button onclick="deleteQuiz('${doc.id}', '${safeJudul}')" class="btn-danger" style="padding:4px 6px; font-size:11px; margin:0; width:auto; display:inline-block;">Hapus</button></td></tr>`;
-                });
-            });
-        }
-        function toggleQuizStatus(quizId, currentStatus) { db.collection("bank_soal").doc(quizId).update({ status_aktif: !currentStatus }).then(loadQuizzesForAdmin); }
-        function deleteQuiz(quizId, judul) { if (confirm(`Yakin mau menghapus ujian "${judul}"?`)) { db.collection("bank_soal").doc(quizId).delete().then(loadQuizzesForAdmin); } }
-        
-        function analisisSoal(quizId, judul) { /* [Kode Analisis Tetap Sama] */ }
-        function previewQuiz(quizId, judul) { /* [Kode Preview Tetap Sama] */ }
-        function downloadQuizAsDocx(quizId, judul) { /* [Kode Word Tetap Sama] */ }
-
-        // ================= REKAP NILAI =================
-        function loadHasil() {
-            const tbody = document.querySelector("#table-nilai tbody");
-            db.collection("hasil_ujian").orderBy("waktu", "desc").get().then((snapshot) => {
-                tbody.innerHTML = "";
-                snapshot.forEach((doc) => {
-                    const data = doc.data(); const safeNama = data.nama.replace(/'/g, "\\'");
-                    tbody.innerHTML += `<tr><td><span style="font-size:11px;">${data.judul_kuis}</span></td><td><strong>${data.nama}</strong></td><td style="text-align:center;">${data.kelas}</td><td style="text-align:center;"><strong style="font-size:16px; color:#d84315;">${data.nilai_pg}</strong></td><td class="no-print" style="white-space:nowrap; text-align:center;"><button onclick="lihatDetailJawaban('${doc.id}')" style="background:#29b6f6; border-color:#0277bd; padding:4px 6px; font-size:11px; margin:0 2px 0 0; width:auto; display:inline-block;">Detail</button><button onclick="hapusDanRemedial('${doc.id}', '${safeNama}', '${data.judul_kuis.replace(/'/g, "\\'")}')" style="background:#ff9800; border-color:#f57c00; padding:4px 6px; font-size:11px; width:auto; margin:0; display:inline-block;">Remedial</button></td></tr>`;
-                });
-            });
-        }
-        function hapusDanRemedial(docId, nama, judul) { if(confirm(`Remedial untuk ${nama}?`)) db.collection("hasil_ujian").doc(docId).delete().then(loadHasil); }
-
-        // ================= MENGERJAKAN UJIAN =================
+        // ================= PENGERJAKAN UJIAN (SISI MURID) =================
         function loadQuizzesForStudent() {
             const listDiv = document.getElementById('quiz-list'); listDiv.innerHTML = "<p>Mencari ujian...</p>";
             db.collection("hasil_ujian").where("nis", "==", currentUser.nis).get().then((hasilSnap) => {
                 const kuisSelesai = []; hasilSnap.forEach(doc => kuisSelesai.push(doc.data().quiz_id));
                 db.collection("bank_soal").where("kelas", "==", currentUser.kelas).where("status_aktif", "==", true).get().then((snapshot) => {
-                    listDiv.innerHTML = snapshot.empty ? `<p style="text-align:center;">Belum ada ujian aktif.</p>` : "";
+                    listDiv.innerHTML = snapshot.empty ? `<p style="text-align:center;">Belum ada kuis yang diaktifkan guru.</p>` : "";
                     snapshot.forEach((doc) => {
                         const kuis = doc.data(); const isSelesai = kuisSelesai.includes(doc.id);
-                        if(isSelesai) listDiv.innerHTML += `<div class="quiz-card disabled"><h3>✅ ${kuis.judul}</h3><p style="color:#d32f2f;">Selesai</p></div>`;
-                        else listDiv.innerHTML += `<div class="quiz-card" onclick="startQuiz('${doc.id}', '${kuis.judul.replace(/'/g, "\\'")}')"><h3>📝 ${kuis.judul}</h3><p style="color:#1565c0;">Mulai</p></div>`;
+                        if(isSelesai) listDiv.innerHTML += `<div class="quiz-card disabled"><h3>✅ ${kuis.judul}</h3><p style="color:#d32f2f; font-weight:bold;">Sudah Selesai Dikerjakan</p></div>`;
+                        else listDiv.innerHTML += `<div class="quiz-card" onclick="startQuiz('${doc.id}', '${kuis.judul.replace(/'/g, "\\'")}')"><h3>📝 ${kuis.judul}</h3><p style="color:#1565c0; font-weight:bold;">Klik untuk Mulai Ujian</p></div>`;
                     });
                 });
             });
@@ -622,8 +648,8 @@
             questions.forEach((s, idx) => {
                 const isPG = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase().includes("ganda") || (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase() === "pg";
                 if(isPG) {
-                    html += `<div class="question"><p><strong>${idx+1}. ${s.Pertanyaan||s.pertanyaan}</strong></p><div class="options"><label><input type="radio" name="q${idx}" value="A"> A. ${s.Pilihan_A||s.Opsi_A||s.opsi_a}</label><label><input type="radio" name="q${idx}" value="B"> B. ${s.Pilihan_B||s.Opsi_B||s.opsi_b}</label><label><input type="radio" name="q${idx}" value="C"> C. ${s.Pilihan_C||s.Opsi_C||s.opsi_c}</label><label><input type="radio" name="q${idx}" value="D"> D. ${s.Pilihan_D||s.Opsi_D||s.opsi_d}</label></div></div>`;
-                } else html += `<div class="question"><p><strong>${idx+1}. [ESAI] ${s.Pertanyaan||s.pertanyaan}</strong></p><textarea name="q${idx}" rows="4"></textarea></div>`;
+                    html += `<div class="question"><p><strong>${idx+1}. ${s.Pertanyaan||s.pertanyaan}</strong></p><div class="options"><label><input type="radio" name="q${idx}" value="A"> A. ${s.Pilihan_A||s.Opsi_A||''}</label><label><input type="radio" name="q${idx}" value="B"> B. ${s.Pilihan_B||s.Opsi_B||''}</label><label><input type="radio" name="q${idx}" value="C"> C. ${s.Pilihan_C||s.Opsi_C||''}</label><label><input type="radio" name="q${idx}" value="D"> D. ${s.Pilihan_D||s.Opsi_D||''}</label></div></div>`;
+                } else html += `<div class="question"><p><strong>${idx+1}. [ESAI] ${s.Pertanyaan||s.pertanyaan}</strong></p><textarea name="q${idx}" rows="4" placeholder="Ketik jawaban uraian disini..."></textarea></div>`;
             }); container.innerHTML = html;
         }
 
@@ -635,12 +661,12 @@
                 const isPG = (soal.Tipe_Soal || soal.Tipe || soal.tipe || "").toLowerCase().includes("ganda") || (soal.Tipe_Soal || soal.Tipe || soal.tipe || "").toLowerCase() === "pg";
                 if(isPG) {
                     const sel = document.querySelector(`input[name="q${idx}"]:checked`); pgAnswers[`soal_${idx+1}`] = sel?sel.value:"";
-                    const kunci = (soal.Kunci_Jawaban || soal.Jawaban_Benar || soal.jawaban_benar || "").toUpperCase().trim();
+                    const kunci = (soal.Kunci_Jawaban || soal.Jawaban_Benar || "").toUpperCase().trim();
                     if(sel && sel.value === kunci) scorePG += scorePerPG;
                 } else esaiAnswers[`soal_${idx+1}`] = document.querySelector(`textarea[name="q${idx}"]`)?.value || "";
             });
             const fScore = Math.round(scorePG); document.querySelector('.btn-danger').innerText = "Menyimpan... ⏳";
             db.collection("hasil_ujian").add({ quiz_id: currentQuizId, judul_kuis: document.getElementById('quiz-title-display').innerText, nis: currentUser.nis, nama: currentUser.nama, kelas: currentUser.kelas, nilai_pg: fScore, jawaban_pg: pgAnswers, jawaban_esai: esaiAnswers, waktu: firebase.firestore.FieldValue.serverTimestamp() })
-              .then(() => { document.getElementById('quiz-section').classList.add('hidden'); document.getElementById('result-section').classList.remove('hidden'); document.getElementById('score-display').innerText = fScore; });
+              .then(() => { document.getElementById('quiz-section').classList.add('hidden'); document.getElementById('result-section').classList.remove('hidden'); document.getElementById('score-display').innerText = "Skor PG: " + fScore; });
         }
     </script></body></html>
