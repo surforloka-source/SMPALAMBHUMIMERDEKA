@@ -74,6 +74,7 @@
 
     <div class="container">
         
+        <!-- HALAMAN LOGIN -->
         <div id="login-section">
             <h1>Selamat Datang di Ujian Seru! 🎮</h1>
             <p style="text-align:center; font-weight:bold;">SMP Alam Bhumi Merdeka</p>
@@ -85,17 +86,20 @@
             <p id="error-msg" style="color:red; text-align:center; display:none;">Data tidak ditemukan! Coba lagi ya.</p>
         </div>
 
+        <!-- DASHBOARD SISWA -->
         <div id="student-dashboard" class="hidden">
             <h2>Ujian Tersedia, <span id="student-name"></span>! 📚</h2>
             <div id="quiz-list"></div>
         </div>
 
+        <!-- HALAMAN KUIS -->
         <div id="quiz-section" class="hidden">
             <h2 id="quiz-title-display">Judul Kuis</h2>
             <div id="questions-container"></div>
             <button onclick="submitQuiz()" class="btn-danger">Selesai & Kumpulkan! 🎯</button>
         </div>
 
+        <!-- DASHBOARD ADMIN -->
         <div id="admin-section" class="hidden">
             <h2 class="no-print">Dashboard Guru / Admin 👨‍🏫</h2>
             
@@ -112,12 +116,13 @@
                 <input type="file" id="csv-file" accept=".csv" style="margin-bottom: 10px;">
                 <button onclick="uploadCSV()" style="background-color: #66bb6a; border-color: #2e7d32; margin-bottom: 15px;">Upload Soal 📤</button>
 
+                <!-- FITUR BARU: ASISTEN PANDUAN GEMINI AI UNTUK ISTRI / GURU -->
                 <div style="background: #e3f2fd; padding: 15px; border-radius: 15px; border: 3px solid #2196f3; margin-top: 10px;">
                     <h4 style="margin-top: 0; color: #0d47a1; text-align: left; font-family: 'Fredoka One', cursive;">🤖 Bantuan Ubah Soal Word/Excel ke CSV via Gemini AI</h4>
                     <p style="font-size: 13px; margin-bottom: 10px; color:#333; line-height: 1.4;">
-                        Jika mentahan soal masih berupa file dokumen MS Word biasa atau tabel Excel, gunakan tombol di bawah ini untuk mengubahnya secara otomatis menjadi struktur kode CSV yang sempurna lewat bantuan kecerdasan buatan Gemini AI.
+                        Jika mentahan soal masih berupa file dokumen MS Word biasa atau tabel Excel, gunakan tombol di bawah ini untuk menyalin instruksi otomatis, lalu paste di Gemini AI.
                     </p>
-                    <textarea id="prompt-gemini" rows="3" style="font-size: 12px; padding: 10px; min-height: 60px; color: #555; background-color: #f0f4f8;" readonly>Tolong konversikan seluruh daftar soal mentah yang saya lampirkan di bawah ini menjadi format tabel kode CSV murni yang siap pakai. Buat susunan baris paling atas (header kolom) wajib menggunakan nama eksak berikut: Tipe_Soal, Pertanyaan, Pilihan_A, Pilihan_B, Pilihan_C, Pilihan_D, Kunci_Jawaban.
+                    <textarea id="prompt-gemini" rows="3" style="font-size: 12px; padding: 10px; min-height: 60px; color: #555; background-color: #f0f4f8; width: 100%; box-sizing: border-box;" readonly>Tolong konversikan seluruh daftar soal mentah yang saya lampirkan di bawah ini menjadi format tabel kode CSV murni yang siap pakai. Buat susunan baris paling atas (header kolom) wajib menggunakan nama eksak berikut: Tipe_Soal, Pertanyaan, Pilihan_A, Pilihan_B, Pilihan_C, Pilihan_D, Kunci_Jawaban.
 
 Ketentuan pengisian nilai:
 1. Kolom 'Tipe_Soal' diisi string 'PG' jika soal itu pilihan ganda, dan diisi string 'Esai' jika soal uraian terbuka.
@@ -129,9 +134,9 @@ Ketentuan pengisian nilai:
 Berikut adalah daftar teks mentah soal saya:</textarea>
                     
                     <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <button onclick="copyGeminiPrompt()" style="background-color: #2196f3; border-color: #0d47a1; padding: 10px; font-size: 14px; margin-top: 0; font-family: 'Fredoka One', cursive;">Salin Perintah 📋</button>
+                        <button onclick="copyGeminiPrompt()" style="background-color: #2196f3; border-color: #0d47a1; padding: 10px; font-size: 14px; margin-top: 0; width: auto; font-family: 'Fredoka One', cursive; color: white;">Salin Perintah 📋</button>
                         <a href="https://gemini.google.com/" target="_blank" style="text-decoration: none; flex: 1;">
-                            <button type="button" style="background-color: #673ab7; border-color: #4527a0; padding: 10px; font-size: 14px; margin-top: 0; width: 100%; font-family: 'Fredoka One', cursive;">Buka Gemini AI 🚀</button>
+                            <button type="button" style="background-color: #673ab7; border-color: #4527a0; padding: 10px; font-size: 14px; margin-top: 0; width: 100%; font-family: 'Fredoka One', cursive; color: white;">Buka Gemini AI 🚀</button>
                         </a>
                     </div>
                 </div>
@@ -161,6 +166,7 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
             <button onclick="window.print()" class="no-print" style="margin-top: 20px;">🖨️ Cetak Laporan Nilai</button>
         </div>
 
+        <!-- HALAMAN HASIL (SISWA) -->
         <div id="result-section" class="hidden">
             <h2>Horee! Selesai! 🎉</h2>
             <h1 id="score-display" style="font-size: 50px;"></h1>
@@ -168,12 +174,14 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
             <button onclick="location.reload()">Kembali ke Awal</button>
         </div>
 
+        <!-- MODAL PREVIEW & DETAIL JAWABAN (ADMIN) -->
         <div id="preview-modal" class="hidden no-print modal-overlay">
             <h2 id="preview-title">Preview Soal</h2>
             <div id="preview-content" style="text-align:left;"></div>
             <button onclick="document.getElementById('preview-modal').classList.add('hidden')" style="background-color: #ef5350; border-color: #c62828;">Tutup</button>
         </div>
         
+        <!-- MODAL ANALISIS SOAL (ADMIN) -->
         <div id="analisis-modal" class="hidden no-print modal-overlay">
             <h2 id="analisis-title">Analisis Tingkat Kesulitan Soal 📊</h2>
             <div id="analisis-content" style="text-align:left;"></div>
@@ -182,18 +190,32 @@ Berikut adalah daftar teks mentah soal saya:</textarea>
 
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <script>
-        // FITUR BARU: SALIN PERINTAH OTOMATIS
+        // FITUR BARU: SALIN PERINTAH GEMINI
         function copyGeminiPrompt() {
             const promptText = document.getElementById('prompt-gemini');
             promptText.select();
-            promptText.setSelectionRange(0, 99999); // Untuk HP
+            promptText.setSelectionRange(0, 99999); // Untuk mobile device
             navigator.clipboard.writeText(promptText.value);
-            alert("Perintah AI Berhasil Disalin! 👍\n\nLangkah selanjutnya:\n1. Klik tombol 'Buka Gemini AI'\n2. Paste (Tempel) perintah ini di sana\n3. Masukkan teks kumpulan soal Word/Excel Anda di bawahnya lalu kirim.");
+            alert("Perintah AI Berhasil Disalin! 👍\n\nLangkah selanjutnya:\n1. Klik tombol 'Buka Gemini AI'\n2. Paste (Tempel) perintah ini di chat Gemini\n3. Paste teks kumpulan soal Word/Excel Anda di bawah perintah tersebut, lalu kirim.");
         }
-    </script>
 
-    <script>
+        // INISIALISASI FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDs2FGY9UoKNYDbw9-OgKkGmR3IZ03UVWM",
+            authDomain: "smpalambhumimerdeka.firebaseapp.com",
+            projectId: "smpalambhumimerdeka",
+            storageBucket: "smpalambhumimerdeka.firebasestorage.app",
+            messagingSenderId: "743796561103",
+            appId: "1:743796561103:web:361177bf6dda593c0ed3ba",
+            measurementId: "G-MWTZ0CFYTW"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         // DATA SISWA
         const data_siswa = [
             { "nis": "0057", "nama": "Ahmad Hafidz Alfahri", "kelas": "VIII" },
