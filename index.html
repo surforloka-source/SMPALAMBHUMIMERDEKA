@@ -4,7 +4,6 @@
     <title>Playground Ujian SMP Alam Bhumi Merdeka</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 
     <style>
@@ -20,7 +19,7 @@
         }
         .container {
             background: white; border-radius: 25px; padding: 30px;
-            width: 100%; max-width: 800px;
+            width: 100%; max-width: 900px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 5px solid #2c3e50;
             margin-top: 20px; position: relative;
         }
@@ -44,25 +43,26 @@
         .btn-danger { background-color: #ef5350; border-color: #c62828; }
         .btn-danger:hover { background-color: #e53935; }
         
-        .quiz-card { background: #fff9c4; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 3px solid #fbc02d; cursor: pointer; text-align:center;}
+        .quiz-card { background: #fff9c4; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 3px solid #fbc02d; cursor: pointer; text-align:center; transition: transform 0.1s;}
         .quiz-card:hover { background: #fff59d; transform: scale(1.02); }
+        .quiz-card.disabled { background: #e0e0e0; border-color: #9e9e9e; cursor: not-allowed; transform: none; opacity: 0.8;}
         
         .question { background: #e1bee7; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 3px solid #8e24aa; }
         .options label { display: block; background: white; padding: 12px; margin: 8px 0; border-radius: 10px; border: 2px solid #ce93d8; cursor: pointer; font-weight: bold;}
         .hidden { display: none !important; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-        th, td { border: 2px solid #2c3e50; padding: 12px; text-align: left; vertical-align: middle; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 14px;}
+        th, td { border: 2px solid #2c3e50; padding: 10px; text-align: left; vertical-align: middle; }
         th { background-color: #29b6f6; color: white; font-family: 'Fredoka One', cursive; }
         
         .admin-box { background: #e8f5e9; padding: 20px; border-radius: 15px; border: 3px solid #4caf50; margin-bottom: 20px; }
         .admin-box-orange { background: #fff3e0; padding: 20px; border-radius: 15px; border: 3px solid #ff9800; margin-bottom: 20px; }
         
-        /* Modal Preview Soal & Detail Jawaban */
-        #preview-modal {
+        /* Modal Style */
+        .modal-overlay {
             position: fixed; top: 10%; left: 50%; transform: translate(-50%, 0);
             background: white; padding: 20px; border: 4px solid #333; z-index: 1000;
-            max-height: 80vh; overflow-y: auto; width: 90%; max-width: 600px;
+            max-height: 80vh; overflow-y: auto; width: 90%; max-width: 750px;
             border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
@@ -75,6 +75,7 @@
 
     <div class="container">
         
+        <!-- HALAMAN LOGIN -->
         <div id="login-section">
             <h1>Selamat Datang di Ujian Seru! 🎮</h1>
             <p style="text-align:center; font-weight:bold;">SMP Alam Bhumi Merdeka</p>
@@ -86,24 +87,26 @@
             <p id="error-msg" style="color:red; text-align:center; display:none;">Data tidak ditemukan! Coba lagi ya.</p>
         </div>
 
+        <!-- DASHBOARD SISWA -->
         <div id="student-dashboard" class="hidden">
-            <h2>Pilih Ujian Kamu, <span id="student-name"></span>! 📚</h2>
+            <h2>Ujian Tersedia, <span id="student-name"></span>! 📚</h2>
             <div id="quiz-list"></div>
         </div>
 
+        <!-- HALAMAN KUIS -->
         <div id="quiz-section" class="hidden">
             <h2 id="quiz-title-display">Judul Kuis</h2>
             <div id="questions-container"></div>
             <button onclick="submitQuiz()" class="btn-danger">Selesai & Kumpulkan! 🎯</button>
         </div>
 
+        <!-- DASHBOARD ADMIN -->
         <div id="admin-section" class="hidden">
             <h2 class="no-print">Dashboard Guru / Admin 👨‍🏫</h2>
             
             <div class="admin-box no-print">
                 <h3>Upload Soal Baru (Format .CSV)</h3>
                 <input type="text" id="quiz-title" placeholder="Contoh: Akidah Akhlak Kelas 8" style="margin-bottom: 10px;">
-                
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label for="quiz-kelas">Target Kelas Ujian:</label>
                     <select id="quiz-kelas">
@@ -111,7 +114,6 @@
                         <option value="IX">Kelas IX</option>
                     </select>
                 </div>
-
                 <input type="file" id="csv-file" accept=".csv">
                 <button onclick="uploadCSV()" style="background-color: #66bb6a; border-color: #2e7d32;">Upload Soal 📤</button>
             </div>
@@ -122,24 +124,25 @@
                     <thead>
                         <tr>
                             <th>Judul Ujian</th>
-                            <th>Kelas</th>
+                            <th>Status (Mata)</th>
                             <th>Jumlah Soal</th>
-                            <th>Aksi</th>
+                            <th>Aksi Detail</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
 
-            <h3>Rekap Nilai Siswa</h3>
-            <button onclick="loadHasil()" class="btn-admin no-print" style="margin-bottom: 10px;">Refresh Data Nilai 🔄</button>
+            <h3>Rekap Nilai & Remedial Siswa</h3>
+            <button onclick="loadHasil()" class="btn-admin no-print" style="margin-bottom: 10px;">Refresh Data 🔄</button>
             <table id="table-nilai">
-                <thead><tr><th>Ujian</th><th>NIS</th><th>Nama</th><th>Kelas</th><th>Nilai PG</th><th class="no-print">Aksi</th></tr></thead>
+                <thead><tr><th>Ujian</th><th>Nama Siswa</th><th>Kelas</th><th>Nilai PG</th><th class="no-print">Aksi (Klik untuk Hapus/Remedial)</th></tr></thead>
                 <tbody></tbody>
             </table>
-            <button onclick="window.print()" class="no-print" style="margin-top: 20px;">🖨️ Cetak Laporan</button>
+            <button onclick="window.print()" class="no-print" style="margin-top: 20px;">🖨️ Cetak Laporan Nilai</button>
         </div>
 
+        <!-- HALAMAN HASIL (SISWA) -->
         <div id="result-section" class="hidden">
             <h2>Horee! Selesai! 🎉</h2>
             <h1 id="score-display" style="font-size: 50px;"></h1>
@@ -147,14 +150,23 @@
             <button onclick="location.reload()">Kembali ke Awal</button>
         </div>
 
-        <div id="preview-modal" class="hidden no-print">
+        <!-- MODAL PREVIEW & DETAIL JAWABAN (ADMIN) -->
+        <div id="preview-modal" class="hidden no-print modal-overlay">
             <h2 id="preview-title">Preview Soal</h2>
             <div id="preview-content" style="text-align:left;"></div>
-            <button onclick="document.getElementById('preview-modal').classList.add('hidden')" style="background-color: #ef5350; border-color: #c62828;">Tutup Preview</button>
+            <button onclick="document.getElementById('preview-modal').classList.add('hidden')" style="background-color: #ef5350; border-color: #c62828;">Tutup</button>
+        </div>
+        
+        <!-- MODAL ANALISIS SOAL (ADMIN) -->
+        <div id="analisis-modal" class="hidden no-print modal-overlay">
+            <h2 id="analisis-title">Analisis Tingkat Kesulitan Soal 📊</h2>
+            <div id="analisis-content" style="text-align:left;"></div>
+            <button onclick="document.getElementById('analisis-modal').classList.add('hidden')" style="background-color: #ef5350; border-color: #c62828;">Tutup Analisis</button>
         </div>
 
     </div>
 
+    <!-- Firebase SDK Compat -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
@@ -244,10 +256,8 @@
         let currentQuizId = null;
         let currentQuestions = [];
 
-        // FUNGSI LOGIN
         function login() {
             const input = document.getElementById('login-input').value.trim();
-            
             if (input === "GURUJUARA") { 
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('admin-section').classList.remove('hidden');
@@ -255,9 +265,7 @@
                 loadHasil(); 
                 return;
             }
-
             const siswa = data_siswa.find(s => s.nis === input || s.nama.toLowerCase() === input.toLowerCase());
-            
             if(siswa) {
                 currentUser = siswa;
                 document.getElementById('student-name').innerText = siswa.nama;
@@ -289,15 +297,14 @@
                         judul: titleInput,
                         kelas: kelasInput,
                         soal: results.data,
+                        status_aktif: false, // DEFAULT AWAL SELALU MATI (DRAFT)
                         dibuat_pada: firebase.firestore.FieldValue.serverTimestamp()
                     }).then(() => {
-                        alert("Soal berhasil di-upload!");
+                        alert("Soal berhasil di-upload ke database (Status saat ini: Mati/Draft). Aktifkan jika sudah siap!");
                         document.getElementById('quiz-title').value = "";
                         fileInput.value = "";
                         loadQuizzesForAdmin(); 
-                    }).catch(error => {
-                        alert("Gagal upload: " + error.message);
-                    });
+                    }).catch(error => { alert("Gagal upload: " + error.message); });
                 }
             });
         }
@@ -320,15 +327,24 @@
                     const targetKelas = data.kelas || "VIII"; 
                     const safeJudul = data.judul.replace(/'/g, "\\'");
                     
+                    // Logic Status Aktif
+                    const isActive = !!data.status_aktif; 
+                    const statusText = isActive ? 'AKTIF 🟢' : 'MATI 🔴';
+                    const statusColor = isActive ? '#4caf50' : '#9e9e9e';
+
                     tbody.innerHTML += `
                         <tr>
-                            <td><strong>${data.judul}</strong></td>
-                            <td><span style="background: #e0f7fa; padding: 4px 8px; border-radius: 8px; font-weight: bold;">Kelas ${targetKelas}</span></td>
-                            <td>${jumlahSoal} Soal</td>
+                            <td><strong>${data.judul}</strong><br><span style="font-size:12px; background: #e0f7fa; padding: 2px 6px; border-radius: 4px;">Kelas ${targetKelas}</span></td>
+                            <td style="text-align:center;">
+                                <button onclick="toggleQuizStatus('${quizId}', ${isActive})" style="background-color: ${statusColor}; border-color: #333; padding: 6px; font-size: 12px; width:100%; margin:0;">${statusText}</button>
+                                <span style="font-size:10px;">(Klik untuk ubah)</span>
+                            </td>
+                            <td style="text-align:center;">${jumlahSoal}</td>
                             <td style="white-space: nowrap;">
-                                <button onclick="previewQuiz('${quizId}', '${safeJudul}')" style="background-color: #29b6f6; border-color: #0277bd; padding: 6px 10px; font-size: 13px; margin-bottom: 5px; width:auto; display:inline-block; margin-top:0;">Lihat Soal 👁️</button>
-                                <button onclick="downloadQuizAsDocx('${quizId}', '${safeJudul}')" style="background-color: #4caf50; border-color: #388e3c; padding: 6px 10px; font-size: 13px; margin-bottom: 5px; width:auto; display:inline-block; margin-top:0;">Unduh Word 📄</button>
-                                <button onclick="deleteQuiz('${quizId}', '${safeJudul}')" class="btn-danger" style="padding: 6px 10px; font-size: 13px; margin-top: 0; width:auto; display:inline-block;">Hapus 🗑️</button>
+                                <button onclick="previewQuiz('${quizId}', '${safeJudul}')" style="background-color: #29b6f6; border-color: #0277bd; padding: 5px 8px; font-size: 12px; margin-bottom: 5px; width:auto; display:inline-block; margin-top:0;">Lihat 👁️</button>
+                                <button onclick="downloadQuizAsDocx('${quizId}', '${safeJudul}')" style="background-color: #4caf50; border-color: #388e3c; padding: 5px 8px; font-size: 12px; margin-bottom: 5px; width:auto; display:inline-block; margin-top:0;">Word 📄</button>
+                                <button onclick="analisisSoal('${quizId}', '${safeJudul}')" style="background-color: #ab47bc; border-color: #7b1fa2; padding: 5px 8px; font-size: 12px; margin-bottom: 5px; width:auto; display:inline-block; margin-top:0;">Analisis 📊</button>
+                                <button onclick="deleteQuiz('${quizId}', '${safeJudul}')" class="btn-danger" style="padding: 5px 8px; font-size: 12px; margin-top: 0; width:auto; display:inline-block;">Hapus 🗑️</button>
                             </td>
                         </tr>
                     `;
@@ -336,116 +352,125 @@
             });
         }
 
-        // FITUR BARU: Mengunduh susunan kuis menjadi file MS Word dokumen rapi (.doc)
+        // FITUR BARU 1: Aktifasi Ujian
+        function toggleQuizStatus(quizId, currentStatus) {
+            db.collection("bank_soal").doc(quizId).update({
+                status_aktif: !currentStatus
+            }).then(() => {
+                loadQuizzesForAdmin(); 
+            }).catch(err => alert("Gagal update status: " + err.message));
+        }
+
+        // FITUR BARU 2: Dasbor Analisis Tingkat Kesulitan Soal
+        function analisisSoal(quizId, judul) {
+            document.getElementById('analisis-title').innerText = "Analisis Kesulitan: " + judul;
+            document.getElementById('analisis-modal').classList.remove('hidden');
+            const contentDiv = document.getElementById('analisis-content');
+            contentDiv.innerHTML = "<p>Sedang menghitung performa siswa (hanya untuk Pilihan Ganda)...</p>";
+
+            db.collection("bank_soal").doc(quizId).get().then(quizDoc => {
+                if(!quizDoc.exists) return;
+                const soalData = quizDoc.data().soal;
+                
+                db.collection("hasil_ujian").where("quiz_id", "==", quizId).get().then(hasilSnap => {
+                    const totalSiswa = hasilSnap.size;
+                    if(totalSiswa === 0) {
+                        contentDiv.innerHTML = "<p>Belum ada satupun siswa yang mengerjakan ujian ini.</p>";
+                        return;
+                    }
+
+                    let stats = {}; 
+                    hasilSnap.forEach(doc => {
+                        const jawaban_pg = doc.data().jawaban_pg || {};
+                        soalData.forEach((s, idx) => {
+                            const isPG = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase().includes("ganda") || (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase() === "pg";
+                            if(isPG) {
+                                const key = `soal_${idx+1}`;
+                                if(!stats[key]) stats[key] = { benar: 0, salah: 0, teks: (s.Pertanyaan || s.pertanyaan) };
+                                
+                                const kunci = (s.Kunci_Jawaban || s.Jawaban_Benar || s.jawaban_benar || "").toUpperCase().trim();
+                                const jawab = (jawaban_pg[key] || "").toUpperCase().trim();
+                                
+                                if(jawab === kunci) { stats[key].benar++; } 
+                                else { stats[key].salah++; }
+                            }
+                        });
+                    });
+
+                    let html = `<p style="margin-top:0;">Total siswa mengerjakan: <strong>${totalSiswa} Siswa</strong></p>
+                    <table style="width:100%; border-collapse:collapse; text-align:left;">
+                        <tr style="background:#8e24aa; color:white;"><th>No</th><th>Cuplikan Soal</th><th>% Benar</th><th>Status Evaluasi</th></tr>`;
+                    
+                    let adaPG = false;
+                    soalData.forEach((s, idx) => {
+                        const key = `soal_${idx+1}`;
+                        if(stats[key]) {
+                            adaPG = true;
+                            const pctBenar = Math.round((stats[key].benar / totalSiswa) * 100);
+                            let statusB = ""; let bgRow = "";
+                            if(pctBenar <= 45) { statusB = "⚠️ Sulit (Perlu Diulang)"; bgRow = "#ffebee"; } // Merah
+                            else if (pctBenar >= 85) { statusB = "🌟 Sangat Mudah"; bgRow = "#e8f5e9"; } // Hijau
+                            else { statusB = "✅ Normal"; bgRow = "white"; } // Putih
+                            
+                            html += `<tr style="background:${bgRow}; border-bottom:1px solid #ccc;">
+                                <td style="text-align:center;">${idx+1}</td>
+                                <td>${stats[key].teks.substring(0, 45)}...</td>
+                                <td><strong>${pctBenar}%</strong><br><span style="font-size:10px;">(${stats[key].benar} dari ${totalSiswa} siswa)</span></td>
+                                <td style="font-weight:bold;">${statusB}</td>
+                            </tr>`;
+                        }
+                    });
+                    
+                    html += `</table>`;
+                    if(!adaPG) html = "<p>Ujian ini tidak memiliki soal pilihan ganda untuk dianalisis.</p>";
+                    contentDiv.innerHTML = html;
+                });
+            });
+        }
+
         function downloadQuizAsDocx(quizId, judul) {
             db.collection("bank_soal").doc(quizId).get().then((doc) => {
-                if (!doc.exists) {
-                    alert("Data soal tidak ditemukan!");
-                    return;
-                }
+                if (!doc.exists) return;
                 const data = doc.data();
                 const soalData = data.soal || [];
                 const targetKelas = data.kelas || "VIII";
 
-                // Membangun dokumen HTML standar yang didukung penuh oleh engine pembaca Microsoft Word
                 let htmlContent = `
                 <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head>
-                    <title>${data.judul}</title>
-                    <style>
-                        body { font-family: 'Arial', sans-serif; font-size: 12pt; line-height: 1.25; color: #000000; }
-                        .kop-surat { text-align: center; margin-bottom: 20px; border-bottom: 3px double #000000; padding-bottom: 5px; }
-                        .kop-title { font-size: 16pt; font-weight: bold; margin: 0; }
-                        .kop-subtitle { font-size: 12pt; font-weight: bold; margin: 0; text-transform: uppercase; }
-                        .info-table { width: 100%; margin-bottom: 20px; font-size: 11pt; border: none; }
-                        .soal-container { margin-bottom: 15px; page-break-inside: avoid; }
-                        .pertanyaan { font-weight: normal; margin: 0 0 5px 0; text-align: justify; }
-                        .opsi-table { margin-left: 15px; width: 100%; border: none; margin-bottom: 5px; }
-                        .opsi-item { padding: 2px 0; width: 50%; vertical-align: top; }
-                    </style>
-                </head>
-                <body>
-                    <div class="kop-surat">
-                        <p class="kop-title">SMP ALAM BHUMI MERDEKA</p>
-                        <p class="kop-subtitle">LEMBAR SOAL UJIAN SEKOLAH</p>
-                        <p style="margin: 0; font-size: 10pt; font-style: italic;">Tahun Ajaran 2026/2027</p>
-                    </div>
+                <head><title>${data.judul}</title><style>
+                    body { font-family: 'Arial', sans-serif; font-size: 12pt; line-height: 1.25; color: #000000; }
+                    .kop-surat { text-align: center; margin-bottom: 20px; border-bottom: 3px double #000000; padding-bottom: 5px; }
+                    .kop-title { font-size: 16pt; font-weight: bold; margin: 0; }
+                    .kop-subtitle { font-size: 12pt; font-weight: bold; margin: 0; text-transform: uppercase; }
+                    .info-table { width: 100%; margin-bottom: 20px; font-size: 11pt; border: none; }
+                    .soal-container { margin-bottom: 15px; page-break-inside: avoid; }
+                    .pertanyaan { font-weight: normal; margin: 0 0 5px 0; text-align: justify; }
+                    .opsi-table { margin-left: 15px; width: 100%; border: none; margin-bottom: 5px; }
+                    .opsi-item { padding: 2px 0; width: 50%; vertical-align: top; }
+                </style></head><body>
+                <div class="kop-surat"><p class="kop-title">SMP ALAM BHUMI MERDEKA</p><p class="kop-subtitle">LEMBAR SOAL UJIAN</p><p style="margin: 0; font-size: 10pt; font-style: italic;">Tahun Ajaran 2026/2027</p></div>
+                <table class="info-table"><tr><td style="width: 15%;">Mata Pelajaran</td><td style="width: 2%;">:</td><td style="width: 43%;"><strong>${data.judul}</strong></td><td style="width: 10%;">Nama</td><td style="width: 2%;">:</td><td>......................................</td></tr><tr><td>Kelas</td><td>:</td><td>${targetKelas}</td><td>NIS</td><td>:</td><td>......................................</td></tr></table>
+                <h4 style="border-bottom: 1px solid #000; padding-bottom: 3px; margin-bottom: 15px;">I. Pilihan Ganda</h4>`;
 
-                    <table class="info-table">
-                        <tr>
-                            <td style="width: 15%;">Mata Pelajaran</td><td style="width: 2%;">:</td><td style="width: 43%;"><strong>${data.judul}</strong></td>
-                            <td style="width: 10%;">Nama</td><td style="width: 2%;">:</td><td>......................................</td>
-                        </tr>
-                        <tr>
-                            <td>Kelas</td><td>:</td><td>${targetKelas}</td>
-                            <td>NIS</td><td>:</td><td>......................................</td>
-                        </tr>
-                    </table>
-
-                    <h4 style="border-bottom: 1px solid #000; padding-bottom: 3px; margin-bottom: 15px;">I. Pilihan Ganda</h4>
-                `;
-
-                let pgCount = 0;
-                let esaiCount = 0;
-                let esaiHtml = "";
-
-                soalData.forEach((s, idx) => {
-                    const tipeRaw = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase();
-                    const isPG = tipeRaw.includes("ganda") || tipeRaw === "pg";
+                let pgCount = 0; let esaiCount = 0; let esaiHtml = "";
+                soalData.forEach((s) => {
+                    const isPG = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase().includes("ganda") || (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase() === "pg";
                     const pertanyaan = s.Pertanyaan || s.pertanyaan || "";
-
                     if (isPG) {
                         pgCount++;
-                        htmlContent += `
-                        <div class="soal-container">
-                            <p class="pertanyaan">${pgCount}. ${pertanyaan}</p>
-                            <table class="opsi-table">
-                                <tr>
-                                    <td class="opsi-item">A. ${s.Pilihan_A || s.Opsi_A || s.opsi_a || ''}</td>
-                                    <td class="opsi-item">B. ${s.Pilihan_B || s.Opsi_B || s.opsi_b || ''}</td>
-                                </tr>
-                                <tr>
-                                    <td class="opsi-item">C. ${s.Pilihan_C || s.Opsi_C || s.opsi_c || ''}</td>
-                                    <td class="opsi-item">D. ${s.Pilihan_D || s.Opsi_D || s.opsi_d || ''}</td>
-                                </tr>
-                            </table>
-                        </div>`;
+                        htmlContent += `<div class="soal-container"><p class="pertanyaan">${pgCount}. ${pertanyaan}</p><table class="opsi-table"><tr><td class="opsi-item">A. ${s.Pilihan_A || s.Opsi_A || s.opsi_a || ''}</td><td class="opsi-item">B. ${s.Pilihan_B || s.Opsi_B || s.opsi_b || ''}</td></tr><tr><td class="opsi-item">C. ${s.Pilihan_C || s.Opsi_C || s.opsi_c || ''}</td><td class="opsi-item">D. ${s.Pilihan_D || s.Opsi_D || s.opsi_d || ''}</td></tr></table></div>`;
                     } else {
                         esaiCount++;
-                        if (esaiCount === 1) {
-                            esaiHtml += `<h4 style="border-bottom: 1px solid #000; padding-bottom: 3px; margin-top: 30px; margin-bottom: 15px;">II. Uraian / Esai</h4>`;
-                        }
-                        esaiHtml += `
-                        <div class="soal-container">
-                            <p class="pertanyaan">${esaiCount}. ${pertanyaan}</p>
-                            <br/><br/><br/><br/>
-                        </div>`;
+                        if (esaiCount === 1) esaiHtml += `<h4 style="border-bottom: 1px solid #000; padding-bottom: 3px; margin-top: 30px; margin-bottom: 15px;">II. Uraian / Esai</h4>`;
+                        esaiHtml += `<div class="soal-container"><p class="pertanyaan">${esaiCount}. ${pertanyaan}</p><br/><br/><br/><br/></div>`;
                     }
                 });
-
-                if (pgCount === 0) {
-                    htmlContent += `<p style="font-style:italic; color:#777;">Tidak ada soal pilihan ganda.</p>`;
-                }
-
-                htmlContent += esaiHtml;
-                htmlContent += `</body></html>`;
-
-                // Mengubah HTML String menjadi Blob aplikasi Microsoft Word resmi
-                const blob = new Blob(['\ufeff' + htmlContent], {
-                    type: 'application/msword'
-                });
-
+                htmlContent += esaiHtml + `</body></html>`;
+                
+                const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword' });
                 const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `SOAL_${data.judul.toUpperCase().replace(/\s+/g, '_')}_KELAS_${targetKelas}.doc`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-            }).catch((err) => {
-                alert("Gagal memproses berkas Word: " + err.message);
+                const a = document.createElement('a'); a.href = url; a.download = `SOAL_${data.judul.toUpperCase().replace(/\s+/g, '_')}_KELAS_${targetKelas}.doc`;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
             });
         }
 
@@ -453,33 +478,19 @@
             document.getElementById('preview-title').innerText = "Detail Soal: " + judul;
             document.getElementById('preview-modal').classList.remove('hidden');
             const contentDiv = document.getElementById('preview-content');
-            contentDiv.innerHTML = "<p>Memuat soal...</p>";
-
+            
             db.collection("bank_soal").doc(quizId).get().then((doc) => {
                 if(doc.exists) {
                     const soalData = doc.data().soal;
                     let html = "";
                     soalData.forEach((s, idx) => {
-                        const tipeRaw = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase();
-                        const isPG = tipeRaw.includes("ganda") || tipeRaw === "pg";
+                        const isPG = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase().includes("ganda") || (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase() === "pg";
                         const pertanyaan = s.Pertanyaan || s.pertanyaan;
-
                         if (isPG) {
                             const kunci = (s.Kunci_Jawaban || s.Jawaban_Benar || s.jawaban_benar || "Tidak Diset").toUpperCase();
-                            html += `
-                            <div style="background: #f5f5f5; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ddd;">
-                                <p style="margin:0 0 10px 0;"><strong>${idx + 1}. ${pertanyaan}</strong></p>
-                                <p style="margin:0; font-size: 14px;">A. ${s.Pilihan_A || s.Opsi_A || s.opsi_a}</p>
-                                <p style="margin:0; font-size: 14px;">B. ${s.Pilihan_B || s.Opsi_B || s.opsi_b}</p>
-                                <p style="margin:0; font-size: 14px;">C. ${s.Pilihan_C || s.Opsi_C || s.opsi_c}</p>
-                                <p style="margin:0; font-size: 14px;">D. ${s.Pilihan_D || s.Opsi_D || s.opsi_d}</p>
-                                <p style="margin:10px 0 0 0; color: #2e7d32; font-weight: bold;">Kunci Jawaban: ${kunci}</p>
-                            </div>`;
+                            html += `<div style="background: #f5f5f5; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ddd;"><p style="margin:0 0 10px 0;"><strong>${idx + 1}. ${pertanyaan}</strong></p><p style="margin:0; font-size: 14px;">A. ${s.Pilihan_A || s.Opsi_A || s.opsi_a}</p><p style="margin:0; font-size: 14px;">B. ${s.Pilihan_B || s.Opsi_B || s.opsi_b}</p><p style="margin:0; font-size: 14px;">C. ${s.Pilihan_C || s.Opsi_C || s.opsi_c}</p><p style="margin:0; font-size: 14px;">D. ${s.Pilihan_D || s.Opsi_D || s.opsi_d}</p><p style="margin:10px 0 0 0; color: #2e7d32; font-weight: bold;">Kunci Jawaban: ${kunci}</p></div>`;
                         } else {
-                            html += `
-                            <div style="background: #fff3e0; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ffcc80;">
-                                <p style="margin:0;"><strong>${idx + 1}. [ESAI] ${pertanyaan}</strong></p>
-                            </div>`;
+                            html += `<div style="background: #fff3e0; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ffcc80;"><p style="margin:0;"><strong>${idx + 1}. [ESAI] ${pertanyaan}</strong></p></div>`;
                         }
                     });
                     contentDiv.innerHTML = html;
@@ -488,19 +499,16 @@
         }
 
         function deleteQuiz(quizId, judul) {
-            if (confirm(`Yakin mau menghapus ujian "${judul}"?\nSiswa tidak akan bisa lagi mengakses soal ini.`)) {
+            if (confirm(`Yakin mau menghapus ujian "${judul}"?\nData nilai siswa terkait ujian ini mungkin akan kesulitan di-analisis.`)) {
                 db.collection("bank_soal").doc(quizId).delete().then(() => {
-                    alert("Ujian berhasil dihapus!");
-                    loadQuizzesForAdmin(); 
-                }).catch((error) => {
-                    alert("Gagal menghapus soal: " + error.message);
+                    alert("Ujian berhasil dihapus!"); loadQuizzesForAdmin(); 
                 });
             }
         }
 
         function loadHasil() {
             const tbody = document.querySelector("#table-nilai tbody");
-            tbody.innerHTML = "<tr><td colspan='6'>Loading data...</td></tr>";
+            tbody.innerHTML = "<tr><td colspan='5'>Loading data...</td></tr>";
 
             db.collection("hasil_ujian").orderBy("waktu", "desc").get().then((snapshot) => {
                 tbody.innerHTML = "";
@@ -509,16 +517,16 @@
                     const docId = doc.id;
                     const safeNama = data.nama.replace(/'/g, "\\'");
                     
+                    // FITUR 3: Tombol Remedial yang menyatu dengan Hapus
                     tbody.innerHTML += `
                         <tr>
                             <td>${data.judul_kuis}</td>
-                            <td>${data.nis}</td>
-                            <td>${data.nama}</td>
+                            <td><strong>${data.nama}</strong></td>
                             <td>${data.kelas}</td>
-                            <td><strong>${data.nilai_pg}</strong></td>
+                            <td><strong style="font-size:18px; color:#d84315;">${data.nilai_pg}</strong></td>
                             <td class="no-print" style="white-space: nowrap;">
-                                <button onclick="lihatDetailJawaban('${docId}')" style="background-color: #29b6f6; border-color: #0277bd; padding: 5px 10px; font-size: 12px; border-radius: 8px; margin-right: 5px; width: auto; display: inline-block; margin-top:0;">Detail 🔍</button>
-                                <button onclick="hapusNilaiSiswa('${docId}', '${safeNama}')" style="background-color: #ef5350; border-color: #c62828; padding: 5px 10px; font-size: 12px; border-radius: 8px; width: auto; display: inline-block; margin-top:0;">Hapus</button>
+                                <button onclick="lihatDetailJawaban('${docId}')" style="background-color: #29b6f6; border-color: #0277bd; padding: 5px 10px; font-size: 12px; border-radius: 8px; margin-right: 5px; width: auto; display: inline-block;">Detail 🔍</button>
+                                <button onclick="hapusDanRemedial('${docId}', '${safeNama}', '${data.judul_kuis.replace(/'/g, "\\'")}')" style="background-color: #ff9800; border-color: #f57c00; padding: 5px 10px; font-size: 12px; border-radius: 8px; width: auto; display: inline-block;">Remedial 🔄</button>
                             </td>
                         </tr>
                     `;
@@ -533,102 +541,50 @@
             contentDiv.innerHTML = "<p>Memuat detail jawaban...</p>";
 
             db.collection("hasil_ujian").doc(docId).get().then((hasilDoc) => {
-                if (!hasilDoc.exists) {
-                    contentDiv.innerHTML = "<p>Data tidak ditemukan.</p>";
-                    return;
-                }
+                if (!hasilDoc.exists) return;
                 const hasilData = hasilDoc.data();
                 const jawabanPG = hasilData.jawaban_pg || null;
                 const jawabanEsai = hasilData.jawaban_esai || {};
 
                 document.getElementById('preview-title').innerText = `Analisis Jawaban: ${hasilData.nama}`;
-
                 db.collection("bank_soal").doc(hasilData.quiz_id).get().then((quizDoc) => {
-                    if (!quizDoc.exists) {
-                        contentDiv.innerHTML = "<p style='color:red;'>Bank soal asli untuk ujian ini sudah dihapus dari sistem, sehingga tidak dapat mencocokkan kunci jawaban secara otomatis.</p>";
-                        return;
-                    }
+                    if (!quizDoc.exists) { contentDiv.innerHTML = "<p style='color:red;'>Bank soal sudah dihapus.</p>"; return; }
                     const soalData = quizDoc.data().soal;
-                    let html = `
-                        <div style="background:#e0f2f1; padding:12px; border-radius:10px; margin-bottom:15px; border:2px solid #004d40;">
-                            <strong>Ujian:</strong> ${hasilData.judul_kuis}<br>
-                            <strong>Siswa:</strong> ${hasilData.nama} (Kelas ${hasilData.kelas})<br>
-                            <strong>Nilai PG:</strong> <span style="font-size:18px; color:#d84315;"><strong>${hasilData.nilai_pg}</strong></span>
-                        </div>
-                        <hr style="border:1px dashed #ccc; margin-bottom:15px;">
-                    `;
+                    let html = `<div style="background:#e0f2f1; padding:12px; border-radius:10px; margin-bottom:15px; border:2px solid #004d40;"><strong>Ujian:</strong> ${hasilData.judul_kuis}<br><strong>Siswa:</strong> ${hasilData.nama} (Kelas ${hasilData.kelas})<br><strong>Nilai PG:</strong> <span style="font-size:18px; color:#d84315;"><strong>${hasilData.nilai_pg}</strong></span></div>`;
                     
                     soalData.forEach((s, idx) => {
-                        const tipeRaw = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase();
-                        const isPG = tipeRaw.includes("ganda") || tipeRaw === "pg";
+                        const isPG = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase().includes("ganda") || (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase() === "pg";
                         const pertanyaan = s.Pertanyaan || s.pertanyaan;
                         const key = `soal_${idx + 1}`;
 
                         if (isPG) {
                             const kunci = (s.Kunci_Jawaban || s.Jawaban_Benar || s.jawaban_benar || "").toUpperCase().trim();
-                            
                             if (!jawabanPG) {
-                                html += `
-                                <div style="background: #f5f5f5; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ddd;">
-                                    <p style="margin:0 0 5px 0;"><strong>${idx + 1}. ${pertanyaan}</strong></p>
-                                    <p style="margin:0; color: #757575; font-style: italic; font-size:14px;">(Ujian lama: Detail pilihan siswa tidak direkam)</p>
-                                    <p style="margin:5px 0 0 0; color: #2e7d32; font-weight: bold; font-size:14px;">Kunci Jawaban: ${kunci}</p>
-                                </div>`;
+                                html += `<div style="background: #f5f5f5; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ddd;"><p><strong>${idx + 1}. ${pertanyaan}</strong></p><p style="color:#2e7d32; font-weight:bold;">Kunci Jawaban: ${kunci}</p></div>`;
                             } else {
                                 const mhsJawab = (jawabanPG[key] || "").toUpperCase().trim();
                                 const isBenar = mhsJawab === kunci;
-                                
-                                let statusText = isBenar 
-                                    ? `<span style="background: #2e7d32; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; font-weight: bold;">✅ BENAR</span>` 
-                                    : `<span style="background: #c62828; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; font-weight: bold;">❌ SALAH</span>`;
-                                if (!mhsJawab) {
-                                    statusText = `<span style="background: #ffa726; color: black; padding: 2px 8px; border-radius: 5px; font-size: 12px; font-weight: bold;">⚠️ KOSONG</span>`;
-                                }
+                                let statusText = isBenar ? `<span style="background: #2e7d32; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; font-weight: bold;">✅ BENAR</span>` : `<span style="background: #c62828; color: white; padding: 2px 8px; border-radius: 5px; font-size: 12px; font-weight: bold;">❌ SALAH</span>`;
+                                if (!mhsJawab) statusText = `<span style="background: #ffa726; color: black; padding: 2px 8px; border-radius: 5px; font-size: 12px; font-weight: bold;">⚠️ KOSONG</span>`;
 
-                                html += `
-                                <div style="background: ${isBenar ? '#e8f5e9' : '#ffebee'}; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid ${isBenar ? '#a5d6a7' : '#ef9a9a'};">
-                                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
-                                        <p style="margin:0; padding-right:10px;"><strong>${idx + 1}. ${pertanyaan}</strong></p>
-                                        ${statusText}
-                                    </div>
-                                    <p style="margin:0 0 4px 0; font-size: 14px; color:#555;">A. ${s.Pilihan_A || s.Opsi_A || s.opsi_a}</p>
-                                    <p style="margin:0 0 4px 0; font-size: 14px; color:#555;">B. ${s.Pilihan_B || s.Opsi_B || s.opsi_b}</p>
-                                    <p style="margin:0 0 4px 0; font-size: 14px; color:#555;">C. ${s.Pilihan_C || s.Opsi_C || s.opsi_c}</p>
-                                    <p style="margin:0 0 8px 0; font-size: 14px; color:#555;">D. ${s.Pilihan_D || s.Opsi_D || s.opsi_d}</p>
-                                    <div style="background:rgba(255,255,255,0.6); padding:8px; border-radius:8px; font-size:14px; border:1px dashed #aaa;">
-                                        <strong>Jawaban Siswa:</strong> ${mhsJawab || '<span style="color:red; font-style:italic;">Tidak dijawab</span>'} <br>
-                                        <strong>Kunci Jawaban:</strong> <span style="color:#0277bd; font-weight:bold;">${kunci}</span>
-                                    </div>
-                                </div>`;
+                                html += `<div style="background: ${isBenar ? '#e8f5e9' : '#ffebee'}; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid ${isBenar ? '#a5d6a7' : '#ef9a9a'};"><div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;"><p style="margin:0; padding-right:10px;"><strong>${idx + 1}. ${pertanyaan}</strong></p>${statusText}</div><div style="background:rgba(255,255,255,0.6); padding:8px; border-radius:8px; font-size:14px; border:1px dashed #aaa;"><strong>Jawaban Siswa:</strong> ${mhsJawab || '<span style="color:red;">Kosong</span>'} <br><strong>Kunci Jawaban:</strong> <span style="color:#0277bd; font-weight:bold;">${kunci}</span></div></div>`;
                             }
                         } else {
-                            html += `
-                            <div style="background: #fff3e0; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ffcc80;">
-                                <p style="margin:0 0 10px 0;"><strong>${idx + 1}. [ESAI] ${pertanyaan}</strong></p>
-                                <div style="background: white; padding: 10px; border-radius: 8px; border: 1px solid #ffb74d; font-size: 14px; min-height:40px;">
-                                    <strong>Jawaban Siswa:</strong><br>
-                                    ${jawabanEsai[key] ? jawabanEsai[key].replace(/\n/g, '<br>') : '<span style="color:red; font-style:italic;">Kosong (Tidak diisi siswa)</span>'}
-                                </div>
-                            </div>`;
+                            html += `<div style="background: #fff3e0; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 2px solid #ffcc80;"><p><strong>${idx + 1}. [ESAI] ${pertanyaan}</strong></p><div style="background: white; padding: 10px; border-radius: 8px; border: 1px solid #ffb74d;"><strong>Jawaban Siswa:</strong><br>${jawabanEsai[key] ? jawabanEsai[key].replace(/\n/g, '<br>') : '<span style="color:red;">Kosong</span>'}</div></div>`;
                         }
                     });
                     contentDiv.innerHTML = html;
-                }).catch((err) => {
-                    contentDiv.innerHTML = "<p>Gagal mencocokkan dengan bank soal: " + err.message + "</p>";
                 });
-            }).catch((err) => {
-                contentDiv.innerHTML = "<p>Gagal memuat hasil dari server: " + err.message + "</p>";
             });
         }
 
-        function hapusNilaiSiswa(docId, nama) {
-            if(confirm(`Yakin mau menghapus nilai ujian atas nama ${nama}? Data tidak bisa dikembalikan.`)) {
+        // FITUR BARU 3: Mode Remedial (Menghapus Data agar Ujian Terbuka Lagi)
+        function hapusDanRemedial(docId, nama, judul_kuis) {
+            if(confirm(`Buka akses Remedial untuk siswa ${nama} di ujian "${judul_kuis}"?\n\nTindakan ini akan menghapus nilai sebelumnya secara permanen agar siswa bisa mengerjakan ujian dari awal.`)) {
                 db.collection("hasil_ujian").doc(docId).delete().then(() => {
-                    alert("Data nilai berhasil dihapus!");
+                    alert(`Akses remedial berhasil dibuka! Siswa ${nama} sekarang dapat mengerjakan ulang ujian dari HP-nya.`);
                     loadHasil(); 
-                }).catch((err) => {
-                    alert("Gagal menghapus nilai: " + err.message);
-                });
+                }).catch(err => alert("Gagal proses remedial: " + err.message));
             }
         }
 
@@ -638,23 +594,45 @@
             const listDiv = document.getElementById('quiz-list');
             listDiv.innerHTML = "<p>Mencari ujian...</p>";
 
-            db.collection("bank_soal").where("kelas", "==", currentUser.kelas).get().then((snapshot) => {
-                listDiv.innerHTML = "";
-                if (snapshot.empty) {
-                    listDiv.innerHTML = `<p>Belum ada ujian yang tersedia untuk Kelas ${currentUser.kelas} hari ini.</p>`;
-                    return;
-                }
-                snapshot.forEach((doc) => {
-                    const kuis = doc.data();
-                    listDiv.innerHTML += `
-                        <div class="quiz-card" onclick="startQuiz('${doc.id}', '${kuis.judul.replace(/'/g, "\\'")}')">
-                            <h3>📝 ${kuis.judul}</h3>
-                            <p>Klik untuk mulai mengerjakan</p>
-                        </div>
-                    `;
+            // CEK DULU UJIAN YANG SUDAH DIKERJAKAN OLEH SISWA INI (Pencegahan kerja dua kali)
+            db.collection("hasil_ujian").where("nis", "==", currentUser.nis).get().then((hasilSnap) => {
+                const kuisSelesai = [];
+                hasilSnap.forEach(doc => kuisSelesai.push(doc.data().quiz_id));
+
+                // AMBIL BANK SOAL YANG SESUAI KELAS DAN STATUSNYA AKTIF (true)
+                db.collection("bank_soal")
+                  .where("kelas", "==", currentUser.kelas)
+                  .where("status_aktif", "==", true)
+                  .get().then((snapshot) => {
+                    listDiv.innerHTML = "";
+                    if (snapshot.empty) {
+                        listDiv.innerHTML = `<p style="text-align:center; color:#555; background:white; padding:15px; border-radius:10px;">Belum ada ujian yang <strong>DI-AKTIF-KAN</strong> oleh guru untuk Kelas ${currentUser.kelas} saat ini.</p>`;
+                        return;
+                    }
+
+                    snapshot.forEach((doc) => {
+                        const kuis = doc.data();
+                        const isSelesai = kuisSelesai.includes(doc.id); // Apakah ID Ujian ada di daftar selesai?
+
+                        if(isSelesai) {
+                            // Render Kuis yang Terkunci / Selesai
+                            listDiv.innerHTML += `
+                                <div class="quiz-card disabled" onclick="alert('Kamu sudah mengerjakan ujian ini. Menunggu nilai akhir dari Bapak/Ibu Guru.')">
+                                    <h3>✅ ${kuis.judul}</h3>
+                                    <p style="color:#d32f2f; font-weight:bold; margin-top:5px;">Selesai Dikerjakan</p>
+                                </div>
+                            `;
+                        } else {
+                            // Render Kuis Terbuka (Bisa Dikerjakan / Mode Remedial)
+                            listDiv.innerHTML += `
+                                <div class="quiz-card" onclick="startQuiz('${doc.id}', '${kuis.judul.replace(/'/g, "\\'")}')">
+                                    <h3>📝 ${kuis.judul}</h3>
+                                    <p style="color:#1565c0; font-weight:bold; margin-top:5px;">Klik untuk mulai mengerjakan</p>
+                                </div>
+                            `;
+                        }
+                    });
                 });
-            }).catch((err) => {
-                listDiv.innerHTML = "<p>Gagal memuat kuis: " + err.message + "</p>";
             });
         }
 
@@ -674,8 +652,7 @@
             const container = document.getElementById('questions-container');
             let html = "";
             questions.forEach((soal, index) => {
-                const tipeRaw = (soal.Tipe_Soal || soal.Tipe || soal.tipe || "").toLowerCase();
-                const isPG = tipeRaw.includes("ganda") || tipeRaw === "pg";
+                const isPG = (soal.Tipe_Soal || soal.Tipe || soal.tipe || "").toLowerCase().includes("ganda") || (soal.Tipe_Soal || soal.Tipe || soal.tipe || "").toLowerCase() === "pg";
                 const pertanyaan = soal.Pertanyaan || soal.pertanyaan;
 
                 if (isPG) {
@@ -684,32 +661,21 @@
                     const opC = soal.Pilihan_C || soal.Opsi_C || soal.opsi_c;
                     const opD = soal.Pilihan_D || soal.Opsi_D || soal.opsi_d;
 
-                    html += `
-                    <div class="question">
-                        <p><strong>${index + 1}. ${pertanyaan}</strong></p>
-                        <div class="options">
+                    html += `<div class="question"><p><strong>${index + 1}. ${pertanyaan}</strong></p><div class="options">
                             <label><input type="radio" name="q${index}" value="A"> A. ${opA}</label>
                             <label><input type="radio" name="q${index}" value="B"> B. ${opB}</label>
                             <label><input type="radio" name="q${index}" value="C"> C. ${opC}</label>
                             <label><input type="radio" name="q${index}" value="D"> D. ${opD}</label>
-                        </div>
-                    </div>`;
+                        </div></div>`;
                 } else {
-                    html += `
-                    <div class="question">
-                        <p><strong>${index + 1}. [ESAI] ${pertanyaan}</strong></p>
-                        <textarea name="q${index}" rows="4" placeholder="Ketik jawaban kamu di sini..."></textarea>
-                    </div>`;
+                    html += `<div class="question"><p><strong>${index + 1}. [ESAI] ${pertanyaan}</strong></p><textarea name="q${index}" rows="4" placeholder="Ketik jawaban kamu di sini..."></textarea></div>`;
                 }
             });
             container.innerHTML = html;
         }
 
         function submitQuiz() {
-            let scorePG = 0;
-            let esaiAnswers = {};
-            let pgAnswers = {}; 
-            let totalPG = 0;
+            let scorePG = 0; let esaiAnswers = {}; let pgAnswers = {}; let totalPG = 0;
             
             currentQuestions.forEach(s => {
                 const t = (s.Tipe_Soal || s.Tipe || s.tipe || "").toLowerCase();
@@ -719,14 +685,11 @@
             const scorePerPG = totalPG > 0 ? (100 / totalPG) : 0;
 
             currentQuestions.forEach((soal, index) => {
-                const tipeRaw = (soal.Tipe_Soal || soal.Tipe || soal.tipe || "").toLowerCase();
-                const isPG = tipeRaw.includes("ganda") || tipeRaw === "pg";
-
+                const isPG = (soal.Tipe_Soal || soal.Tipe || soal.tipe || "").toLowerCase().includes("ganda") || (soal.Tipe_Soal || soal.Tipe || soal.tipe || "").toLowerCase() === "pg";
                 if (isPG) {
                     const selected = document.querySelector(`input[name="q${index}"]:checked`);
                     const answerValue = selected ? selected.value : "";
                     pgAnswers[`soal_${index + 1}`] = answerValue; 
-
                     const kunci = (soal.Kunci_Jawaban || soal.Jawaban_Benar || soal.jawaban_benar || "").toUpperCase().trim();
                     if(selected && selected.value === kunci) { scorePG += scorePerPG; }
                 } else {
@@ -737,8 +700,7 @@
 
             const finalScore = Math.round(scorePG);
             const btn = document.querySelector('.btn-danger');
-            btn.innerText = "Menyimpan Nilai... ⏳";
-            btn.disabled = true;
+            btn.innerText = "Menyimpan Nilai... ⏳"; btn.disabled = true;
 
             db.collection("hasil_ujian").add({
                 quiz_id: currentQuizId,
@@ -756,8 +718,7 @@
                 document.getElementById('score-display').innerText = "Nilai PG: " + finalScore;
             }).catch((err) => {
                 alert("Gagal menyimpan. Pastikan 'Rules' Firebase sudah disetting!");
-                btn.innerText = "Selesai & Kumpulkan! 🎯";
-                btn.disabled = false;
+                btn.innerText = "Selesai & Kumpulkan! 🎯"; btn.disabled = false;
             });
         }
     </script></body></html>
