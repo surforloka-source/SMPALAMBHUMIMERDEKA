@@ -58,7 +58,6 @@
         .admin-box { background: #e8f5e9; padding: 20px; border-radius: 15px; border: 3px solid #4caf50; margin-bottom: 20px; }
         .admin-box-orange { background: #fff3e0; padding: 20px; border-radius: 15px; border: 3px solid #ff9800; margin-bottom: 20px; }
         
-        /* Modal Style */
         .modal-overlay {
             position: fixed; top: 10%; left: 50%; transform: translate(-50%, 0);
             background: white; padding: 20px; border: 4px solid #333; z-index: 1000;
@@ -75,7 +74,6 @@
 
     <div class="container">
         
-        <!-- HALAMAN LOGIN -->
         <div id="login-section">
             <h1>Selamat Datang di Ujian Seru! 🎮</h1>
             <p style="text-align:center; font-weight:bold;">SMP Alam Bhumi Merdeka</p>
@@ -87,20 +85,17 @@
             <p id="error-msg" style="color:red; text-align:center; display:none;">Data tidak ditemukan! Coba lagi ya.</p>
         </div>
 
-        <!-- DASHBOARD SISWA -->
         <div id="student-dashboard" class="hidden">
             <h2>Ujian Tersedia, <span id="student-name"></span>! 📚</h2>
             <div id="quiz-list"></div>
         </div>
 
-        <!-- HALAMAN KUIS -->
         <div id="quiz-section" class="hidden">
             <h2 id="quiz-title-display">Judul Kuis</h2>
             <div id="questions-container"></div>
             <button onclick="submitQuiz()" class="btn-danger">Selesai & Kumpulkan! 🎯</button>
         </div>
 
-        <!-- DASHBOARD ADMIN -->
         <div id="admin-section" class="hidden">
             <h2 class="no-print">Dashboard Guru / Admin 👨‍🏫</h2>
             
@@ -114,8 +109,32 @@
                         <option value="IX">Kelas IX</option>
                     </select>
                 </div>
-                <input type="file" id="csv-file" accept=".csv">
-                <button onclick="uploadCSV()" style="background-color: #66bb6a; border-color: #2e7d32;">Upload Soal 📤</button>
+                <input type="file" id="csv-file" accept=".csv" style="margin-bottom: 10px;">
+                <button onclick="uploadCSV()" style="background-color: #66bb6a; border-color: #2e7d32; margin-bottom: 15px;">Upload Soal 📤</button>
+
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 15px; border: 3px solid #2196f3; margin-top: 10px;">
+                    <h4 style="margin-top: 0; color: #0d47a1; text-align: left; font-family: 'Fredoka One', cursive;">🤖 Bantuan Ubah Soal Word/Excel ke CSV via Gemini AI</h4>
+                    <p style="font-size: 13px; margin-bottom: 10px; color:#333; line-height: 1.4;">
+                        Jika mentahan soal masih berupa file dokumen MS Word biasa atau tabel Excel, gunakan tombol di bawah ini untuk mengubahnya secara otomatis menjadi struktur kode CSV yang sempurna lewat bantuan kecerdasan buatan Gemini AI.
+                    </p>
+                    <textarea id="prompt-gemini" rows="3" style="font-size: 12px; padding: 10px; min-height: 60px; color: #555; background-color: #f0f4f8;" readonly>Tolong konversikan seluruh daftar soal mentah yang saya lampirkan di bawah ini menjadi format tabel kode CSV murni yang siap pakai. Buat susunan baris paling atas (header kolom) wajib menggunakan nama eksak berikut: Tipe_Soal, Pertanyaan, Pilihan_A, Pilihan_B, Pilihan_C, Pilihan_D, Kunci_Jawaban.
+
+Ketentuan pengisian nilai:
+1. Kolom 'Tipe_Soal' diisi string 'PG' jika soal itu pilihan ganda, dan diisi string 'Esai' jika soal uraian terbuka.
+2. Kolom pilihan jawaban (Pilihan_A sampai Pilihan_D) dikosongkan saja khusus untuk baris soal yang bertipe Esai.
+3. Isian 'Kunci_Jawaban' wajib menggunakan satu karakter huruf kapital (A, B, C, atau D) yang sesuai.
+4. Pastikan tanda pemisah antar kolom menggunakan karakter koma tunggal (,). Jika di dalam teks pertanyaan mengandung tanda koma, bungkus seluruh teks pertanyaan tersebut menggunakan tanda petik dua ("...").
+5. Tampilkan hasilnya langsung dalam bentuk blok kode pemrograman CSV bersih siap salin tanpa interpretasi chat atau penjelasan pembuka/penutup tambahan lainnya.
+
+Berikut adalah daftar teks mentah soal saya:</textarea>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button onclick="copyGeminiPrompt()" style="background-color: #2196f3; border-color: #0d47a1; padding: 10px; font-size: 14px; margin-top: 0; font-family: 'Fredoka One', cursive;">Salin Perintah 📋</button>
+                        <a href="https://gemini.google.com/" target="_blank" style="text-decoration: none; flex: 1;">
+                            <button type="button" style="background-color: #673ab7; border-color: #4527a0; padding: 10px; font-size: 14px; margin-top: 0; width: 100%; font-family: 'Fredoka One', cursive;">Buka Gemini AI 🚀</button>
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div class="admin-box-orange no-print">
@@ -142,7 +161,6 @@
             <button onclick="window.print()" class="no-print" style="margin-top: 20px;">🖨️ Cetak Laporan Nilai</button>
         </div>
 
-        <!-- HALAMAN HASIL (SISWA) -->
         <div id="result-section" class="hidden">
             <h2>Horee! Selesai! 🎉</h2>
             <h1 id="score-display" style="font-size: 50px;"></h1>
@@ -150,14 +168,12 @@
             <button onclick="location.reload()">Kembali ke Awal</button>
         </div>
 
-        <!-- MODAL PREVIEW & DETAIL JAWABAN (ADMIN) -->
         <div id="preview-modal" class="hidden no-print modal-overlay">
             <h2 id="preview-title">Preview Soal</h2>
             <div id="preview-content" style="text-align:left;"></div>
             <button onclick="document.getElementById('preview-modal').classList.add('hidden')" style="background-color: #ef5350; border-color: #c62828;">Tutup</button>
         </div>
         
-        <!-- MODAL ANALISIS SOAL (ADMIN) -->
         <div id="analisis-modal" class="hidden no-print modal-overlay">
             <h2 id="analisis-title">Analisis Tingkat Kesulitan Soal 📊</h2>
             <div id="analisis-content" style="text-align:left;"></div>
@@ -166,24 +182,18 @@
 
     </div>
 
-    <!-- Firebase SDK Compat -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script>
+        // FITUR BARU: SALIN PERINTAH OTOMATIS
+        function copyGeminiPrompt() {
+            const promptText = document.getElementById('prompt-gemini');
+            promptText.select();
+            promptText.setSelectionRange(0, 99999); // Untuk HP
+            navigator.clipboard.writeText(promptText.value);
+            alert("Perintah AI Berhasil Disalin! 👍\n\nLangkah selanjutnya:\n1. Klik tombol 'Buka Gemini AI'\n2. Paste (Tempel) perintah ini di sana\n3. Masukkan teks kumpulan soal Word/Excel Anda di bawahnya lalu kirim.");
+        }
+    </script>
 
     <script>
-        // INISIALISASI FIREBASE
-        const firebaseConfig = {
-            apiKey: "AIzaSyDs2FGY9UoKNYDbw9-OgKkGmR3IZ03UVWM",
-            authDomain: "smpalambhumimerdeka.firebaseapp.com",
-            projectId: "smpalambhumimerdeka",
-            storageBucket: "smpalambhumimerdeka.firebasestorage.app",
-            messagingSenderId: "743796561103",
-            appId: "1:743796561103:web:361177bf6dda593c0ed3ba",
-            measurementId: "G-MWTZ0CFYTW"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
         // DATA SISWA
         const data_siswa = [
             { "nis": "0057", "nama": "Ahmad Hafidz Alfahri", "kelas": "VIII" },
@@ -277,8 +287,6 @@
             }
         }
 
-        // ================= FITUR ADMIN =================
-
         function uploadCSV() {
             const fileInput = document.getElementById('csv-file');
             const titleInput = document.getElementById('quiz-title').value;
@@ -297,7 +305,7 @@
                         judul: titleInput,
                         kelas: kelasInput,
                         soal: results.data,
-                        status_aktif: false, // DEFAULT AWAL SELALU MATI (DRAFT)
+                        status_aktif: false, 
                         dibuat_pada: firebase.firestore.FieldValue.serverTimestamp()
                     }).then(() => {
                         alert("Soal berhasil di-upload ke database (Status saat ini: Mati/Draft). Aktifkan jika sudah siap!");
@@ -327,7 +335,6 @@
                     const targetKelas = data.kelas || "VIII"; 
                     const safeJudul = data.judul.replace(/'/g, "\\'");
                     
-                    // Logic Status Aktif
                     const isActive = !!data.status_aktif; 
                     const statusText = isActive ? 'AKTIF 🟢' : 'MATI 🔴';
                     const statusColor = isActive ? '#4caf50' : '#9e9e9e';
@@ -352,7 +359,6 @@
             });
         }
 
-        // FITUR BARU 1: Aktifasi Ujian
         function toggleQuizStatus(quizId, currentStatus) {
             db.collection("bank_soal").doc(quizId).update({
                 status_aktif: !currentStatus
@@ -361,12 +367,11 @@
             }).catch(err => alert("Gagal update status: " + err.message));
         }
 
-        // FITUR BARU 2: Dasbor Analisis Tingkat Kesulitan Soal
         function analisisSoal(quizId, judul) {
             document.getElementById('analisis-title').innerText = "Analisis Kesulitan: " + judul;
             document.getElementById('analisis-modal').classList.remove('hidden');
             const contentDiv = document.getElementById('analisis-content');
-            contentDiv.innerHTML = "<p>Sedang menghitung performa siswa (hanya untuk Pilihan Ganda)...</p>";
+            contentDiv.innerHTML = "<p>Sedang menghitung performa siswa...</p>";
 
             db.collection("bank_soal").doc(quizId).get().then(quizDoc => {
                 if(!quizDoc.exists) return;
@@ -387,20 +392,14 @@
                             if(isPG) {
                                 const key = `soal_${idx+1}`;
                                 if(!stats[key]) stats[key] = { benar: 0, salah: 0, teks: (s.Pertanyaan || s.pertanyaan) };
-                                
                                 const kunci = (s.Kunci_Jawaban || s.Jawaban_Benar || s.jawaban_benar || "").toUpperCase().trim();
                                 const jawab = (jawaban_pg[key] || "").toUpperCase().trim();
-                                
-                                if(jawab === kunci) { stats[key].benar++; } 
-                                else { stats[key].salah++; }
+                                if(jawab === kunci) { stats[key].benar++; } else { stats[key].salah++; }
                             }
                         });
                     });
 
-                    let html = `<p style="margin-top:0;">Total siswa mengerjakan: <strong>${totalSiswa} Siswa</strong></p>
-                    <table style="width:100%; border-collapse:collapse; text-align:left;">
-                        <tr style="background:#8e24aa; color:white;"><th>No</th><th>Cuplikan Soal</th><th>% Benar</th><th>Status Evaluasi</th></tr>`;
-                    
+                    let html = `<p>Total siswa mengerjakan: <strong>${totalSiswa} Siswa</strong></p><table style='width:100%'><thead><tr style='background:#8e24aa; color:white;'><th>No</th><th>Cuplikan Soal</th><th>% Benar</th><th>Status</th></tr></thead><tbody>`;
                     let adaPG = false;
                     soalData.forEach((s, idx) => {
                         const key = `soal_${idx+1}`;
@@ -408,21 +407,15 @@
                             adaPG = true;
                             const pctBenar = Math.round((stats[key].benar / totalSiswa) * 100);
                             let statusB = ""; let bgRow = "";
-                            if(pctBenar <= 45) { statusB = "⚠️ Sulit (Perlu Diulang)"; bgRow = "#ffebee"; } // Merah
-                            else if (pctBenar >= 85) { statusB = "🌟 Sangat Mudah"; bgRow = "#e8f5e9"; } // Hijau
-                            else { statusB = "✅ Normal"; bgRow = "white"; } // Putih
+                            if(pctBenar <= 45) { statusB = "⚠️ Sulit"; bgRow = "#ffebee"; }
+                            else if (pctBenar >= 85) { statusB = "🌟 Mudah"; bgRow = "#e8f5e9"; }
+                            else { statusB = "✅ Normal"; bgRow = "white"; }
                             
-                            html += `<tr style="background:${bgRow}; border-bottom:1px solid #ccc;">
-                                <td style="text-align:center;">${idx+1}</td>
-                                <td>${stats[key].teks.substring(0, 45)}...</td>
-                                <td><strong>${pctBenar}%</strong><br><span style="font-size:10px;">(${stats[key].benar} dari ${totalSiswa} siswa)</span></td>
-                                <td style="font-weight:bold;">${statusB}</td>
-                            </tr>`;
+                            html += `<tr style="background:${bgRow};"><td>${idx+1}</td><td>${stats[key].teks.substring(0,40)}...</td><td>${pctBenar}%</td><td>${statusB}</td></tr>`;
                         }
                     });
-                    
-                    html += `</table>`;
-                    if(!adaPG) html = "<p>Ujian ini tidak memiliki soal pilihan ganda untuk dianalisis.</p>";
+                    html += `</tbody></table>`;
+                    if(!adaPG) html = "<p>Ujian ini tidak memiliki soal pilihan ganda.</p>";
                     contentDiv.innerHTML = html;
                 });
             });
@@ -499,7 +492,7 @@
         }
 
         function deleteQuiz(quizId, judul) {
-            if (confirm(`Yakin mau menghapus ujian "${judul}"?\nData nilai siswa terkait ujian ini mungkin akan kesulitan di-analisis.`)) {
+            if (confirm(`Yakin mau menghapus ujian "${judul}"?`)) {
                 db.collection("bank_soal").doc(quizId).delete().then(() => {
                     alert("Ujian berhasil dihapus!"); loadQuizzesForAdmin(); 
                 });
@@ -517,7 +510,6 @@
                     const docId = doc.id;
                     const safeNama = data.nama.replace(/'/g, "\\'");
                     
-                    // FITUR 3: Tombol Remedial yang menyatu dengan Hapus
                     tbody.innerHTML += `
                         <tr>
                             <td>${data.judul_kuis}</td>
@@ -578,13 +570,12 @@
             });
         }
 
-        // FITUR BARU 3: Mode Remedial (Menghapus Data agar Ujian Terbuka Lagi)
         function hapusDanRemedial(docId, nama, judul_kuis) {
-            if(confirm(`Buka akses Remedial untuk siswa ${nama} di ujian "${judul_kuis}"?\n\nTindakan ini akan menghapus nilai sebelumnya secara permanen agar siswa bisa mengerjakan ujian dari awal.`)) {
+            if(confirm(`Buka akses Remedial untuk siswa ${nama} di ujian "${judul_kuis}"?`)) {
                 db.collection("hasil_ujian").doc(docId).delete().then(() => {
-                    alert(`Akses remedial berhasil dibuka! Siswa ${nama} sekarang dapat mengerjakan ulang ujian dari HP-nya.`);
+                    alert(`Akses remedial berhasil dibuka! Siswa ${nama} dapat mengerjakan ulang.`);
                     loadHasil(); 
-                }).catch(err => alert("Gagal proses remedial: " + err.message));
+                });
             }
         }
 
@@ -594,36 +585,32 @@
             const listDiv = document.getElementById('quiz-list');
             listDiv.innerHTML = "<p>Mencari ujian...</p>";
 
-            // CEK DULU UJIAN YANG SUDAH DIKERJAKAN OLEH SISWA INI (Pencegahan kerja dua kali)
             db.collection("hasil_ujian").where("nis", "==", currentUser.nis).get().then((hasilSnap) => {
                 const kuisSelesai = [];
                 hasilSnap.forEach(doc => kuisSelesai.push(doc.data().quiz_id));
 
-                // AMBIL BANK SOAL YANG SESUAI KELAS DAN STATUSNYA AKTIF (true)
                 db.collection("bank_soal")
                   .where("kelas", "==", currentUser.kelas)
                   .where("status_aktif", "==", true)
                   .get().then((snapshot) => {
                     listDiv.innerHTML = "";
                     if (snapshot.empty) {
-                        listDiv.innerHTML = `<p style="text-align:center; color:#555; background:white; padding:15px; border-radius:10px;">Belum ada ujian yang <strong>DI-AKTIF-KAN</strong> oleh guru untuk Kelas ${currentUser.kelas} saat ini.</p>`;
+                        listDiv.innerHTML = `<p style="text-align:center; color:#555; background:white; padding:15px; border-radius:10px;">Belum ada ujian aktif untuk Kelas ${currentUser.kelas} saat ini.</p>`;
                         return;
                     }
 
                     snapshot.forEach((doc) => {
                         const kuis = doc.data();
-                        const isSelesai = kuisSelesai.includes(doc.id); // Apakah ID Ujian ada di daftar selesai?
+                        const isSelesai = kuisSelesai.includes(doc.id);
 
                         if(isSelesai) {
-                            // Render Kuis yang Terkunci / Selesai
                             listDiv.innerHTML += `
-                                <div class="quiz-card disabled" onclick="alert('Kamu sudah mengerjakan ujian ini. Menunggu nilai akhir dari Bapak/Ibu Guru.')">
+                                <div class="quiz-card disabled" onclick="alert('Kamu sudah mengerjakan ujian ini.')">
                                     <h3>✅ ${kuis.judul}</h3>
                                     <p style="color:#d32f2f; font-weight:bold; margin-top:5px;">Selesai Dikerjakan</p>
                                 </div>
                             `;
                         } else {
-                            // Render Kuis Terbuka (Bisa Dikerjakan / Mode Remedial)
                             listDiv.innerHTML += `
                                 <div class="quiz-card" onclick="startQuiz('${doc.id}', '${kuis.judul.replace(/'/g, "\\'")}')">
                                     <h3>📝 ${kuis.judul}</h3>
@@ -717,7 +704,7 @@
                 document.getElementById('result-section').classList.remove('hidden');
                 document.getElementById('score-display').innerText = "Nilai PG: " + finalScore;
             }).catch((err) => {
-                alert("Gagal menyimpan. Pastikan 'Rules' Firebase sudah disetting!");
+                alert("Gagal menyimpan.");
                 btn.innerText = "Selesai & Kumpulkan! 🎯"; btn.disabled = false;
             });
         }
